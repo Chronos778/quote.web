@@ -381,9 +381,30 @@
             <h2>About This Project</h2>
             <p>Welcome to Quote.Web, a minimalist platform for daily inspiration. Our mission is to provide you with thoughtful, motivational quotes to inspire your day.</p>
             
-            <p>This project combines a clean, minimal design with the power of the Quotes API to deliver random quotes whenever you need a little inspiration.</p>
+            <p>This project is powered by our custom-built <strong>Quotes API</strong> - a free, fast, and reliable RESTful API that delivers inspirational quotes to developers worldwide. Whether you're building a web app, mobile application, or any project that needs motivational content, our API has you covered!</p>
 
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">Features</h3>
+            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">🚀 Why Use Our Quotes API?</h3>
+            <ul class="features-list">
+                <li>Free to use with no authentication required</li>
+                <li>Fast and reliable with 99.9% uptime</li>
+                <li>Large collection of inspiring quotes from various authors</li>
+                <li>Simple RESTful endpoints - easy to integrate</li>
+                <li>JSON responses - works with any programming language</li>
+                <li>CORS enabled - use directly from the browser</li>
+                <li>No rate limits for fair usage</li>
+            </ul>
+
+            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">📡 API Endpoint</h3>
+            <p style="background: #f5f5f5; padding: 15px; border-left: 3px solid #000; font-family: monospace; font-size: 14px;">
+                GET https://quotes-api-ruddy.vercel.app/quotes/random
+            </p>
+
+            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">💻 Quick Start Example</h3>
+            <p style="background: #f5f5f5; padding: 15px; border-left: 3px solid #000; font-family: monospace; font-size: 13px; white-space: pre-wrap; line-height: 1.6;">fetch('https://quotes-api-ruddy.vercel.app/quotes/random')
+  .then(response => response.json())
+  .then(data => console.log(data.data.text));</p>
+
+            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">✨ Quote.Web Features</h3>
             <ul class="features-list">
                 <li>Random quotes displayed on every refresh</li>
                 <li>One-click copy to clipboard functionality</li>
@@ -392,13 +413,10 @@
                 <li>Built with vanilla HTML, CSS, and JavaScript</li>
             </ul>
 
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">Technologies</h3>
-            <ul class="features-list">
-                <li>HTML5 for structure</li>
-                <li>CSS3 for styling and animations</li>
-                <li>Vanilla JavaScript for interactivity</li>
-                <li>Quotes API for quote data</li>
-            </ul>
+            <p style="margin-top: 40px; padding: 20px; background: #fafafa; border: 1px solid #eee; text-align: center;">
+                <strong>Start building with our API today!</strong><br>
+                Visit our <a href="https://github.com/Chronos778/quote.web" target="_blank" style="color: #000; text-decoration: underline;">GitHub repository</a> for more documentation and examples.
+            </p>
         </section>
 
         <!-- Contact Section -->
