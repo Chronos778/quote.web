@@ -15,7 +15,7 @@ A modern, minimal website for daily inspiration. Browse random quotes, learn mor
 ## Sections
 
 ### Home
-Your daily quote generator. See a random inspirational quote and copy it to your clipboard.
+Your daily quote generator. See a random inspirational quote and you can copy it to your clipboard.
 
 ### About
 Learn about Quote.Web, our mission, features, and the technologies we use.
