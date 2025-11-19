@@ -119,6 +119,40 @@
             margin-bottom: 40px;
         }
 
+        /* Search Container */
+        .search-container {
+            margin-bottom: 40px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            font-family: inherit;
+            font-size: 14px;
+            color: #333;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .search-box input::placeholder {
+            color: #999;
+        }
+
         .quote-text {
             font-size: 26px;
             font-weight: 400;
@@ -368,6 +402,17 @@
             <div class="header">
                 <h1>Daily Inspiration</h1>
             </div>
+            
+            <!-- Search/Filter Section -->
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchKeyword" placeholder="Search by keyword..." />
+                    <input type="text" id="searchAuthor" placeholder="Filter by author..." />
+                    <button onclick="searchQuotes()">Search</button>
+                    <button class="copy-btn" onclick="clearSearch()">Clear</button>
+                </div>
+            </div>
+
             <div class="quote-text" id="quoteText">Loading...</div>
             <div class="quote-author" id="quoteAuthor"></div>
             <div class="button-group">
@@ -407,6 +452,8 @@
             <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">✨ Quote.Web Features</h3>
             <ul class="features-list">
                 <li>Random quotes displayed on every refresh</li>
+                <li>Search quotes by keyword or filter by author</li>
+                <li>Real-time filtering across entire quote database</li>
                 <li>One-click copy to clipboard functionality</li>
                 <li>Beautifully designed minimal interface</li>
                 <li>Fully responsive on all devices</li>
@@ -460,6 +507,8 @@
     <script>
         let currentQuote = '';
         let currentAuthor = '';
+        let allQuotes = [];
+        let filteredQuotes = [];
 
         // Navigation
         function showSection(sectionId) {
@@ -478,6 +527,74 @@
             event.target.classList.add('active');
         }
 
+        // Fetch all quotes (for search functionality)
+        async function loadAllQuotes() {
+            try {
+                const response = await fetch('https://api.codetabs.com/v1/proxy?quest=https://quotes-api-ruddy.vercel.app/quotes');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                allQuotes = result.data || [];
+            } catch (error) {
+                console.error('Error loading all quotes:', error);
+                allQuotes = [];
+            }
+        }
+
+        // Search quotes by keyword or author
+        async function searchQuotes() {
+            const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
+            const author = document.getElementById('searchAuthor').value.trim().toLowerCase();
+            const quoteText = document.getElementById('quoteText');
+            const quoteAuthor = document.getElementById('quoteAuthor');
+
+            if (!keyword && !author) {
+                quoteText.textContent = 'Please enter a keyword or author to search.';
+                quoteAuthor.textContent = '';
+                return;
+            }
+
+            quoteText.textContent = 'Searching...';
+            quoteAuthor.textContent = '';
+
+            // Load all quotes if not already loaded
+            if (allQuotes.length === 0) {
+                await loadAllQuotes();
+            }
+
+            // Filter quotes
+            filteredQuotes = allQuotes.filter(quote => {
+                const matchesKeyword = !keyword || quote.text.toLowerCase().includes(keyword);
+                const matchesAuthor = !author || quote.author.toLowerCase().includes(author);
+                return matchesKeyword && matchesAuthor;
+            });
+
+            if (filteredQuotes.length > 0) {
+                // Show a random quote from filtered results
+                const randomQuote = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
+                currentQuote = randomQuote.text;
+                currentAuthor = randomQuote.author;
+                quoteText.textContent = `"${currentQuote}"`;
+                quoteAuthor.textContent = `— ${currentAuthor} (${filteredQuotes.length} match${filteredQuotes.length !== 1 ? 'es' : ''})`;
+            } else {
+                quoteText.textContent = 'No quotes found matching your search.';
+                quoteAuthor.textContent = 'Try different keywords or author names.';
+                currentQuote = '';
+                currentAuthor = '';
+            }
+        }
+
+        // Clear search and show random quote
+        function clearSearch() {
+            document.getElementById('searchKeyword').value = '';
+            document.getElementById('searchAuthor').value = '';
+            filteredQuotes = [];
+            fetchQuote();
+        }
+
         // Fetch Quote
         async function fetchQuote() {
             const quoteText = document.getElementById('quoteText');
@@ -485,6 +602,16 @@
 
             quoteText.textContent = 'Loading...';
             quoteAuthor.textContent = '';
+
+            // If we have filtered results, show next from that set
+            if (filteredQuotes.length > 0) {
+                const randomQuote = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
+                currentQuote = randomQuote.text;
+                currentAuthor = randomQuote.author;
+                quoteText.textContent = `"${currentQuote}"`;
+                quoteAuthor.textContent = `— ${currentAuthor} (${filteredQuotes.length} match${filteredQuotes.length !== 1 ? 'es' : ''})`;
+                return;
+            }
 
             try {
                 // Using api.codetabs.com proxy to bypass CORS
@@ -541,6 +668,20 @@
 
         // Load a quote when page loads
         window.addEventListener('load', fetchQuote);
+
+        // Add Enter key support for search
+        document.addEventListener('DOMContentLoaded', () => {
+            const keywordInput = document.getElementById('searchKeyword');
+            const authorInput = document.getElementById('searchAuthor');
+            
+            keywordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchQuotes();
+            });
+            
+            authorInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchQuotes();
+            });
+        });
     </script>
 </body>
 </html>

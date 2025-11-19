@@ -5,6 +5,7 @@ A modern, minimal website for daily inspiration. Browse random quotes, learn mor
 ## Features
 
 - 🎯 **Random Quotes** - Displays a new inspirational quote on each page load
+- 🔍 **Search & Filter** - Search quotes by keyword or filter by author name
 - 🔄 **New Quote Button** - Fetch fresh quotes with one click
 - 📋 **Copy to Clipboard** - Easily share quotes
 - 📱 **Fully Responsive** - Beautiful design on all devices
@@ -15,7 +16,7 @@ A modern, minimal website for daily inspiration. Browse random quotes, learn mor
 ## Sections
 
 ### Home
-Your daily quote generator. See a random inspirational quote and copy it to your clipboard.
+Your daily quote generator with powerful search capabilities. View random inspirational quotes, search by keyword, filter by author, or browse through matching results.
 
 ### About
 Learn about Quote.Web, our mission, features, and the technologies we use.
@@ -41,7 +42,10 @@ Visit the live website at: [Quote.Web](https://chronos778.github.io/quote.web)
 
 ## How It Works
 
-Quote.Web fetches random quotes from the [Quotes API](https://quotes-api-ruddy.vercel.app) using a CORS proxy and displays them with smooth animations and a beautiful minimal interface.
+Quote.Web fetches quotes from the [Quotes API](https://quotes-api-ruddy.vercel.app) using a CORS proxy:
+- **Random quotes** are fetched from `/quotes/random` endpoint
+- **Search & filter** queries the full `/quotes` endpoint and filters client-side
+- Results display instantly with smooth animations and a beautiful minimal interface
 
 ## Technologies
 
@@ -67,6 +71,14 @@ quote.web/
 - Smooth fade-in animations
 - Clean typography and spacing
 
+### Search & Filter
+- Search quotes by keyword (searches quote text)
+- Filter quotes by author name
+- Real-time filtering across entire database
+- Result counter showing number of matches
+- Press Enter to search quickly
+- Clear button to reset filters
+
 ### Navigation
 - Sticky navigation bar
 - Easy section switching
@@ -88,11 +100,12 @@ quote.web/
 
 ## Future Enhancements
 
-- Quote filtering by category
+- Quote filtering by category/tags
 - User favorites/bookmarks
 - Share to social media
 - Dark mode theme
 - Quote of the day email subscription
+- Advanced search with multiple filters
 
 ## Contributing
 
