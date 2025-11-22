@@ -1,17 +1,17 @@
 # Quote.Web
 
-A modern, minimal website for daily inspiration. Browse random quotes, learn more about the project, and get in touch.
+A modern, dark, minimal website for daily inspiration. Browse random quotes with a premium UI, learn more about the project, and find contact links.
 
 ## Features
 
-- 🎯 **Random Quotes** - Displays a new inspirational quote on each page load
-- 🔍 **Search & Filter** - Search quotes by keyword or filter by author name
-- 🔄 **New Quote Button** - Fetch fresh quotes with one click
-- 📋 **Copy to Clipboard** - Easily share quotes
-- 📱 **Fully Responsive** - Beautiful design on all devices
-- 🎨 **Minimal UI** - Clean, elegant interface with subtle animations
-- 📄 **Multi-Page Layout** - Home, About, and Contact sections with smooth navigation
-- 💬 **Contact Form** - Get in touch with the project creators
+- **Random Quotes** - Displays a new inspirational quote on each page load
+- **Search & Filter** - Search quotes by keyword or filter by author name
+- **New Quote Button** - Fetch fresh quotes with one click
+- **Copy to Clipboard** - Easily share quotes
+- **Fully Responsive** - Beautiful design on all devices
+- **Minimal UI** - Clean, elegant interface with smooth animations and 3D tilt effects
+- **Multi-Page Layout** - Home, About, and Contact sections with smooth navigation
+- **Contact Links** - Email and GitHub links for quick contact
 
 ## Sections
 
@@ -22,7 +22,7 @@ Your daily quote generator with powerful search capabilities. View random inspir
 Learn about Quote.Web, our mission, features, and the technologies we use.
 
 ### Contact
-Connect with us through email, GitHub, or our contact form.
+Connect with us through email or GitHub links.
 
 ## Getting Started
 
@@ -50,9 +50,9 @@ Quote.Web fetches quotes from the [Quotes API](https://quotes-api-ruddy.vercel.a
 ## Technologies
 
 - **HTML5** - Semantic structure
-- **CSS3** - Responsive design and smooth animations
+- **CSS3** - Responsive, dark-theme design with smooth animations and tilt
 - **Vanilla JavaScript** - Pure JavaScript, no frameworks
-- **Quotes API** - 5000+ curated quotes
+- **Quotes API** - 10,000+ curated quotes
 
 ## Project Structure
 
@@ -85,10 +85,8 @@ quote.web/
 - Active state indicators
 - Mobile-friendly menu
 
-### Contact Form
-- Simple, elegant form design
-- Form validation
-- Success feedback
+### Contact
+- Contact section with email and GitHub links
 
 ## Browser Support
 

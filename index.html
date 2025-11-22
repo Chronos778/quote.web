@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Quotes - Inspiration Daily</title>
+    <title>Quote.Web — Daily Inspiration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-V6E/MpYd6IhN9s3VuF9O7c9KZoDVt8sIu3aoCAxjHn0SI7RyhokW2N1GpStO2Qd6hw2yffA9H3Wc7x1J5p2jIw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         * {
             margin: 0;
@@ -11,73 +12,152 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #020617;
+            --bg-alt: #020617;
+            --surface: rgba(15, 23, 42, 0.94);
+            --surface-soft: rgba(15, 23, 42, 0.9);
+            --accent: #6366f1;
+            --accent-soft: rgba(99, 102, 241, 0.16);
+            --accent-alt: #c7d2fe;
+            --text: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border-subtle: rgba(148, 163, 184, 0.35);
+            --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
+            --radius-xl: 26px;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --nav-height: 78px;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #ffffff;
-            color: #000;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+            color: var(--text);
             line-height: 1.6;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(51, 65, 85, 0.7), transparent 55%),
+                radial-gradient(circle at 100% 10%, rgba(30, 64, 175, 0.45), transparent 55%),
+                radial-gradient(circle at 50% 100%, rgba(15, 23, 42, 0.95), transparent 55%),
+                linear-gradient(145deg, #020617 0%, #020617 40%, #020617 100%);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Global chrome */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 0% 100%, rgba(51, 65, 85, 0.6), transparent 55%),
+                radial-gradient(circle at 100% 100%, rgba(30, 64, 175, 0.4), transparent 55%);
+            mix-blend-mode: soft-light;
+            opacity: 0.7;
+            z-index: -1;
         }
 
         /* Navigation */
         nav {
-            background: #fff;
-            border-bottom: 1px solid #eee;
-            padding: 0;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 40;
+            backdrop-filter: blur(22px);
+            background: radial-gradient(circle at top, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.88));
+            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
         }
 
         nav .nav-container {
-            max-width: 900px;
+            max-width: 1080px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
+            padding: 18px 32px;
         }
 
         .logo {
-            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: #000;
+            color: var(--text);
+        }
+
+        .logo-mark {
+            width: 26px;
+            height: 26px;
+            border-radius: 30px;
+            background: conic-gradient(from 210deg, #64748b, #6366f1, #22c55e, #64748b);
+            position: relative;
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7), 0 12px 24px rgba(15, 23, 42, 0.9);
+            overflow: hidden;
+        }
+
+        .logo-mark::after {
+            content: "";
+            position: absolute;
+            inset: 2px;
+            border-radius: inherit;
+            background: radial-gradient(circle at 30% 0%, rgba(248, 250, 252, 0.7), transparent 45%),
+                        radial-gradient(circle at 70% 100%, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1));
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 28px;
             list-style: none;
+            padding: 4px 6px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.66);
+            box-shadow: 0 10px 36px rgba(15, 23, 42, 0.9);
         }
 
         .nav-links a {
-            color: #666;
+            position: relative;
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 11px;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: color 0.2s;
+            letter-spacing: 0.18em;
             cursor: pointer;
+            padding: 7px 14px;
+            border-radius: 999px;
+            transition: color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
         }
 
         .nav-links a:hover {
-            color: #000;
+            color: var(--text);
+            transform: translateY(-1px);
+            background: rgba(15, 23, 42, 0.85);
         }
 
         .nav-links a.active {
-            color: #000;
-            border-bottom: 2px solid #000;
-            padding-bottom: 2px;
+            color: #020617;
+            background: linear-gradient(120deg, #e5e7eb, #c7d2fe, #a5b4fc);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.85);
         }
 
         /* Main Container */
         .container {
-            max-width: 900px;
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 60px 40px;
-            min-height: calc(100vh - 80px);
+            padding: 48px 32px 56px;
+            min-height: calc(100vh - var(--nav-height));
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .shell {
+            display: grid;
+            grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+            gap: 28px;
+            align-items: stretch;
         }
 
         /* Section visibility */
@@ -85,43 +165,122 @@
             display: block;
         }
 
-        #about, #contact {
+        #about,
+        #contact {
             display: none;
         }
 
         .section {
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeIn 0.45s ease-out;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(8px) scale(0.985);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
-        /* Home Section */
+        /* Home / Hero */
         .header {
-            margin-bottom: 50px;
-            text-align: center;
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-muted);
+        }
+
+        .kicker-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 0%, #f9fafb, var(--accent));
+            box-shadow: 0 0 0 4px rgba(248, 250, 252, 0.08);
         }
 
         .header h1 {
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 2px;
+            font-size: clamp(32px, 4vw, 40px);
+            font-weight: 650;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
-            color: #666;
-            margin-bottom: 40px;
+            color: var(--text);
+            margin: 20px 0 10px;
+        }
+
+        .header-subtitle {
+            max-width: 460px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .hero-shell {
+            background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.12), transparent 52%),
+                        radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.98), #020617);
+            border-radius: var(--radius-xl);
+            padding: 26px 26px 24px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
+                        box-shadow 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
+                        border-color 0.25s ease;
+        }
+
+        .hero-shell::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.16), transparent 55%),
+                radial-gradient(circle at 100% 0%, rgba(255, 107, 0, 0.24), transparent 55%);
+            opacity: 0.75;
+            mix-blend-mode: screen;
+        }
+
+        .hero-shell-inner {
+            position: relative;
+            z-index: 1;
         }
 
         /* Search Container */
         .search-container {
-            margin-bottom: 40px;
+            margin-bottom: 26px;
+        }
+
+        .search-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+            gap: 16px;
+        }
+
+        .search-label-row span {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-muted);
+        }
+
+        .search-meta {
+            font-size: 11px;
+            color: rgba(148, 163, 184, 0.9);
         }
 
         .search-box {
@@ -136,30 +295,79 @@
         .search-box input {
             flex: 1;
             min-width: 200px;
-            padding: 12px 16px;
-            border: 1px solid #ddd;
+            padding: 11px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text);
             font-family: inherit;
-            font-size: 14px;
-            color: #333;
-            transition: border-color 0.2s;
+            font-size: 13px;
+            transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease, transform 0.12s ease;
         }
 
         .search-box input:focus {
             outline: none;
-            border-color: #000;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.7), 0 0 0 12px rgba(249, 115, 22, 0.15);
+            background: rgba(15, 23, 42, 0.95);
+            transform: translateY(-1px);
         }
 
         .search-box input::placeholder {
-            color: #999;
+            color: rgba(148, 163, 184, 0.9);
+        }
+
+        .quote-shell {
+            margin-top: 22px;
+            padding: 20px 22px 22px;
+            border-radius: var(--radius-lg);
+            background: radial-gradient(circle at 0% 0%, rgba(148, 163, 184, 0.22), transparent 55%),
+                        linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.96);
+            position: relative;
+            overflow: hidden;
+            animation: glowPulse 9s ease-in-out infinite;
+        }
+
+        .tilt-card {
+            transform-style: preserve-3d;
+            cursor: grab;
+        }
+
+        .tilt-card:active {
+            cursor: grabbing;
+        }
+
+        .quote-shell::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background: radial-gradient(circle at 0% 0%, rgba(148, 163, 184, 0.26), transparent 55%);
+            opacity: 0.24;
+            mix-blend-mode: screen;
+        }
+
+        .quote-shell-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(148, 163, 184, 0.95);
+            margin-bottom: 12px;
         }
 
         .quote-text {
-            font-size: 26px;
-            font-weight: 400;
-            margin-bottom: 30px;
-            color: #000;
+            font-size: clamp(22px, 3.1vw, 28px);
+            font-weight: 450;
+            margin-bottom: 18px;
+            color: var(--text);
             line-height: 1.7;
-            min-height: 100px;
+            min-height: 96px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -167,217 +375,267 @@
         }
 
         .quote-author {
-            font-size: 14px;
-            color: #999;
-            margin-bottom: 50px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 26px;
             font-weight: 400;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.12em;
             text-align: center;
+            text-transform: uppercase;
         }
 
         .button-group {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         button {
-            background: transparent;
-            color: #000;
-            border: 1px solid #000;
-            padding: 12px 28px;
-            font-size: 12px;
-            font-weight: 500;
-            border-radius: 0px;
+            position: relative;
+            background: radial-gradient(circle at 0% 0%, #e5e7eb, var(--accent)),
+                        radial-gradient(circle at 100% 100%, #9ca3af, #64748b);
+            color: #020617;
+            border: none;
+            padding: 10px 26px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 999px;
             cursor: pointer;
-            transition: all 0.2s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.16em;
+            transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease, background-position 0.18s ease;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.9);
+            background-size: 180% 180%;
+            background-position: 0% 50%;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            border: 1px solid rgba(248, 250, 252, 0.2);
+            box-shadow: 0 0 0 0 rgba(248, 250, 252, 0.45);
+            opacity: 0;
+            transition: opacity 0.2s ease, box-shadow 0.2s ease;
+            pointer-events: none;
         }
 
         button:hover {
-            background: #000;
-            color: #fff;
+            transform: translateY(-1.5px) scale(1.01);
+            filter: brightness(1.04);
+            background-position: 100% 50%;
+            box-shadow: 0 20px 45px rgba(249, 115, 22, 0.75);
+        }
+
+        button:hover::after {
+            opacity: 1;
+            box-shadow: 0 0 24px 0 rgba(250, 250, 250, 0.55);
         }
 
         button:active {
-            opacity: 0.8;
+            transform: translateY(0.5px) scale(0.99);
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
         }
 
         .copy-btn {
-            border: 1px solid #999;
-            color: #666;
+            background: rgba(15, 23, 42, 0.95);
+            color: var(--text-muted);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.65);
         }
 
         .copy-btn:hover {
-            background: #999;
-            border-color: #999;
-            color: #fff;
+            background: rgba(15, 23, 42, 1);
+            color: var(--text);
+            border-color: rgba(248, 250, 252, 0.9);
         }
 
-        /* About Section */
-        #about h2 {
-            font-size: 28px;
-            margin-bottom: 30px;
-            font-weight: 400;
+        /* Right column: About / Contact layout wrapper */
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .side-card {
+            padding: 22px 22px 20px;
+            border-radius: var(--radius-lg);
+            background: radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.09), transparent 52%),
+                        linear-gradient(135deg, rgba(15, 23, 42, 0.97), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
+                        box-shadow 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
+                        border-color 0.25s ease;
+        }
+
+        .hero-shell:hover {
+            box-shadow: 0 26px 70px rgba(15, 23, 42, 1);
+            border-color: rgba(248, 250, 252, 0.55);
+        }
+
+        .side-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 55px rgba(15, 23, 42, 0.95);
+            border-color: rgba(248, 250, 252, 0.45);
+        }
+
+        .side-card h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            font-weight: 550;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        #about h2,
+        #contact h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            font-weight: 550;
         }
 
         #about p {
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.8;
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 18px;
+            color: var(--text-muted);
         }
 
         .features-list {
-            margin: 40px 0;
+            margin: 24px 0 10px;
             list-style: none;
         }
 
         .features-list li {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 16px;
-            color: #333;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            font-size: 14px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .features-list li:before {
-            content: "→ ";
-            margin-right: 10px;
-            color: #999;
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #e5e7eb, #c7d2fe, #94a3b8);
+            box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.4);
         }
 
         /* Contact Section */
         #contact h2 {
-            font-size: 28px;
-            margin-bottom: 40px;
-            font-weight: 400;
+            margin-bottom: 22px;
         }
 
         .contact-info {
-            margin-bottom: 40px;
+            margin-bottom: 28px;
         }
 
         .contact-item {
-            margin-bottom: 30px;
+            margin-bottom: 18px;
         }
 
         .contact-item h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
+            font-size: 11px;
+            font-weight: 650;
+            margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #000;
+            letter-spacing: 0.18em;
+            color: var(--text-muted);
         }
 
         .contact-item p {
-            font-size: 16px;
-            color: #666;
+            font-size: 14px;
+            color: var(--text);
         }
 
         .contact-item a {
-            color: #000;
+            color: var(--accent-alt);
             text-decoration: none;
-            border-bottom: 1px solid #000;
+            border-bottom: 1px solid rgba(165, 180, 252, 0.8);
         }
 
         .contact-item a:hover {
-            color: #666;
+            color: #fbbf24;
         }
 
-        .contact-form {
-            margin-top: 40px;
-            max-width: 500px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            font-family: inherit;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #000;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .submit-btn {
-            background: #000;
-            color: #fff;
-            border: 1px solid #000;
-            padding: 12px 40px;
-        }
-
-        .submit-btn:hover {
-            background: #fff;
-            color: #000;
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
+                border-color: rgba(148, 163, 184, 0.45);
+            }
+            50% {
+                box-shadow: 0 28px 70px rgba(15, 23, 42, 1), 0 0 26px rgba(248, 250, 252, 0.15);
+                border-color: rgba(248, 250, 252, 0.7);
+            }
         }
 
         /* Footer */
         footer {
-            border-top: 1px solid #eee;
-            padding: 40px;
+            border-top: 1px solid rgba(148, 163, 184, 0.35);
+            padding: 22px 32px 28px;
             text-align: center;
-            color: #999;
-            font-size: 12px;
-            background: #fafafa;
+            color: var(--text-muted);
+            font-size: 11px;
+            background: radial-gradient(circle at 50% -60%, rgba(15, 23, 42, 0.3), rgba(15, 23, 42, 0.98));
         }
 
         /* Responsive */
-        @media (max-width: 600px) {
-            nav .nav-container {
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
+        @media (max-width: 1024px) {
+            .container {
+                padding: 32px 20px 40px;
             }
 
-            .nav-links {
-                gap: 15px;
+            .shell {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .hero-shell {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            nav .nav-container {
+                flex-direction: column;
+                gap: 14px;
+                padding: 14px 18px 16px;
             }
 
             .container {
-                padding: 40px 20px;
+                padding: 24px 16px 36px;
+            }
+
+            .hero-shell {
+                padding: 20px 18px 18px;
+                border-radius: 20px;
+            }
+
+            .quote-shell {
+                padding: 16px 14px 18px;
+                border-radius: 18px;
             }
 
             .quote-text {
-                font-size: 20px;
-                min-height: 80px;
+                font-size: 18px;
+                min-height: 72px;
             }
 
-            #about h2,
-            #contact h2 {
-                font-size: 22px;
+            .nav-links {
+                width: 100%;
+                justify-content: center;
             }
 
             button {
-                padding: 10px 20px;
-                font-size: 11px;
+                padding-inline: 20px;
+                font-size: 10px;
             }
         }
     </style>
@@ -397,106 +655,96 @@
 
     <!-- Main Content -->
     <div class="container">
-        <!-- Home Section -->
-        <section id="home" class="section">
-            <div class="header">
-                <h1>Daily Inspiration</h1>
-            </div>
-            
-            <!-- Search/Filter Section -->
-            <div class="search-container">
-                <div class="search-box">
-                    <input type="text" id="searchKeyword" placeholder="Search by keyword..." />
-                    <input type="text" id="searchAuthor" placeholder="Filter by author..." />
-                    <button onclick="searchQuotes()">Search</button>
-                    <button class="copy-btn" onclick="clearSearch()">Clear</button>
+        <div class="shell">
+            <!-- Left: Home / Hero -->
+            <section id="home" class="section animate__animated animate__fadeInUp animate__faster">
+                <div class="hero-shell tilt-card">
+                    <div class="hero-shell-inner">
+                        <div class="header">
+                            <div class="kicker">
+                                <span class="kicker-dot"></span>
+                                Daily quote engine
+                            </div>
+                            <h1>Daily Inspiration</h1>
+                            <p class="header-subtitle">
+                                Discover a new quote every time you visit. Search by keyword, filter by author,
+                                and keep your favorite lines a click away.
+                            </p>
+                        </div>
+
+                        <!-- Search/Filter Section -->
+                        <div class="search-container">
+                            <div class="search-label-row">
+                                <span>Search & filter</span>
+                                <span class="search-meta">Powered by Quotes API · 10,000+ curated quotes</span>
+                            </div>
+                            <div class="search-box">
+                                <input type="text" id="searchKeyword" placeholder="Search by keyword..." />
+                                <input type="text" id="searchAuthor" placeholder="Filter by author..." />
+                                <button onclick="searchQuotes()">Search</button>
+                                <button class="copy-btn" onclick="clearSearch()">Clear</button>
+                            </div>
+                        </div>
+
+                        <!-- Quote Card -->
+                        <div class="quote-shell tilt-card">
+                            <div class="quote-shell-inner">
+                                <div class="quote-label">Today&apos;s pull</div>
+                                <div class="quote-text" id="quoteText">Loading...</div>
+                                <div class="quote-author" id="quoteAuthor"></div>
+                                <div class="button-group">
+                                    <button onclick="fetchQuote()">New Quote</button>
+                                    <button class="copy-btn" onclick="copyQuote()">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="quote-text" id="quoteText">Loading...</div>
-            <div class="quote-author" id="quoteAuthor"></div>
-            <div class="button-group">
-                <button onclick="fetchQuote()">New Quote</button>
-                <button class="copy-btn" onclick="copyQuote()">Copy</button>
-            </div>
-        </section>
+            <!-- Right: Side Panel (About & Contact) -->
+            <aside class="side-panel">
+                <!-- About Section -->
+                <section id="about" class="section side-card animate__animated animate__fadeInUp animate__fast">
+                    <h2>About This Project</h2>
+                    <p>Welcome to Quote.Web, a focused space for daily inspiration. Behind this clean interface is a fast
+                    and free Quotes API tailored for developers.</p>
 
-        <!-- About Section -->
-        <section id="about" class="section">
-            <h2>About This Project</h2>
-            <p>Welcome to Quote.Web, a minimalist platform for daily inspiration. Our mission is to provide you with thoughtful, motivational quotes to inspire your day.</p>
-            
-            <p>This project is powered by our custom-built <strong>Quotes API</strong> - a free, fast, and reliable RESTful API that delivers inspirational quotes to developers worldwide. Whether you're building a web app, mobile application, or any project that needs motivational content, our API has you covered!</p>
+                    <p>This project is powered by our custom-built <strong>Quotes API</strong> – a RESTful service that
+                    delivers inspirational quotes to any platform. Drop it into your web apps, CLIs, dashboards, or
+                    mobile projects in seconds.</p>
 
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">🚀 Why Use Our Quotes API?</h3>
-            <ul class="features-list">
-                <li>Free to use with no authentication required</li>
-                <li>Fast and reliable with 99.9% uptime</li>
-                <li>Large collection of inspiring quotes from various authors</li>
-                <li>Simple RESTful endpoints - easy to integrate</li>
-                <li>JSON responses - works with any programming language</li>
-                <li>CORS enabled - use directly from the browser</li>
-                <li>No rate limits for fair usage</li>
-            </ul>
+                    <ul class="features-list">
+                        <li>Free to use with no authentication required</li>
+                        <li>Fast and reliable with 99.9% uptime</li>
+                        <li>Large collection of inspiring quotes from various authors</li>
+                        <li>Simple RESTful endpoints and JSON responses</li>
+                        <li>CORS enabled – call directly from the browser</li>
+                    </ul>
 
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">📡 API Endpoint</h3>
-            <p style="background: #f5f5f5; padding: 15px; border-left: 3px solid #000; font-family: monospace; font-size: 14px;">
-                GET https://quotes-api-ruddy.vercel.app/quotes/random
-            </p>
+                    <p style="margin-top: 20px; font-size: 13px; color: var(--text-muted);">
+                        API endpoint:
+                        <br>
+                        <code>GET https://quotes-api-ruddy.vercel.app/quotes/random</code>
+                    </p>
+                </section>
 
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">💻 Quick Start Example</h3>
-            <p style="background: #f5f5f5; padding: 15px; border-left: 3px solid #000; font-family: monospace; font-size: 13px; white-space: pre-wrap; line-height: 1.6;">fetch('https://quotes-api-ruddy.vercel.app/quotes/random')
-  .then(response => response.json())
-  .then(data => console.log(data.data.text));</p>
-
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 18px;">✨ Quote.Web Features</h3>
-            <ul class="features-list">
-                <li>Random quotes displayed on every refresh</li>
-                <li>Search quotes by keyword or filter by author</li>
-                <li>Real-time filtering across entire quote database</li>
-                <li>One-click copy to clipboard functionality</li>
-                <li>Beautifully designed minimal interface</li>
-                <li>Fully responsive on all devices</li>
-                <li>Built with vanilla HTML, CSS, and JavaScript</li>
-            </ul>
-
-            <p style="margin-top: 40px; padding: 20px; background: #fafafa; border: 1px solid #eee; text-align: center;">
-                <strong>Start building with our API today!</strong><br>
-                Visit our <a href="https://github.com/Chronos778/quote.web" target="_blank" style="color: #000; text-decoration: underline;">GitHub repository</a> for more documentation and examples.
-            </p>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="section">
-            <h2>Get In Touch</h2>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <h3>Email</h3>
-                    <p><a href="mailto:maithilpatil9@gmail.com">maithilpatil9@gmail.com</a></p>
-                </div>
-                <div class="contact-item">
-                    <h3>GitHub</h3>
-                    <p><a href="https://github.com/Chronos778/quote.web" target="_blank">github.com/Chronos778/quote.web</a></p>
-                </div>
-            </div>
-
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Send us a message</h3>
-            <form class="contact-form" onsubmit="handleSubmit(event)">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" name="message" required></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Send Message</button>
-            </form>
-        </section>
+                <!-- Contact Section -->
+                <section id="contact" class="section side-card animate__animated animate__fadeInUp animate__fast">
+                    <h2>Get In Touch</h2>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <h3>Email</h3>
+                            <p><a href="mailto:maithilpatil9@gmail.com">maithilpatil9@gmail.com</a></p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>GitHub</h3>
+                            <p><a href="https://github.com/Chronos778/quote.web" target="_blank">github.com/Chronos778/quote.web</a></p>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -595,6 +843,20 @@
             fetchQuote();
         }
 
+        function animateQuoteChange() {
+            const quoteText = document.getElementById('quoteText');
+            const quoteAuthor = document.getElementById('quoteAuthor');
+            if (!quoteText || !quoteAuthor) return;
+
+            quoteText.classList.remove('animate__animated', 'animate__fadeInUp');
+            quoteAuthor.classList.remove('animate__animated', 'animate__fadeInUp');
+
+            void quoteText.offsetWidth;
+
+            quoteText.classList.add('animate__animated', 'animate__fadeInUp');
+            quoteAuthor.classList.add('animate__animated', 'animate__fadeInUp');
+        }
+
         // Fetch Quote
         async function fetchQuote() {
             const quoteText = document.getElementById('quoteText');
@@ -610,6 +872,7 @@
                 currentAuthor = randomQuote.author;
                 quoteText.textContent = `"${currentQuote}"`;
                 quoteAuthor.textContent = `— ${currentAuthor} (${filteredQuotes.length} match${filteredQuotes.length !== 1 ? 'es' : ''})`;
+                animateQuoteChange();
                 return;
             }
 
@@ -628,6 +891,7 @@
 
                 quoteText.textContent = `"${currentQuote}"`;
                 quoteAuthor.textContent = `— ${currentAuthor}`;
+                animateQuoteChange();
             } catch (error) {
                 quoteText.textContent = 'Failed to load quote. Please try again.';
                 quoteAuthor.textContent = 'Check browser console for details';
@@ -652,34 +916,55 @@
             }
         }
 
-        // Handle Contact Form
-        function handleSubmit(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            
-            // Simulate form submission
-            alert(`Thank you ${name}! We received your message and will get back to you soon.`);
-            
-            // Reset form
-            event.target.reset();
-        }
-
         // Load a quote when page loads
         window.addEventListener('load', fetchQuote);
 
-        // Add Enter key support for search
+        // Add Enter key support for search and init tilt effect
         document.addEventListener('DOMContentLoaded', () => {
             const keywordInput = document.getElementById('searchKeyword');
             const authorInput = document.getElementById('searchAuthor');
             
-            keywordInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') searchQuotes();
-            });
+            if (keywordInput) {
+                keywordInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') searchQuotes();
+                });
+            }
             
-            authorInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') searchQuotes();
+            if (authorInput) {
+                authorInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') searchQuotes();
+                });
+            }
+
+            const tiltCards = document.querySelectorAll('.tilt-card');
+            tiltCards.forEach(card => {
+                const strength = 18;
+
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const midX = rect.width / 2;
+                    const midY = rect.height / 2;
+
+                    const rotateX = ((y - midY) / midY) * -strength;
+                    const rotateY = ((x - midX) / midX) * strength;
+
+                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+                });
+
+                card.addEventListener('mousedown', () => {
+                    card.style.boxShadow = '0 28px 80px rgba(15, 23, 42, 1)';
+                });
+
+                ['mouseup', 'mouseleave'].forEach(ev => {
+                    card.addEventListener(ev, () => {
+                        card.style.boxShadow = '';
+                        if (ev === 'mouseleave') {
+                            card.style.transform = '';
+                        }
+                    });
+                });
             });
         });
     </script>
