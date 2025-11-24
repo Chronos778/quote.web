@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quote.Web — Daily Inspiration</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-V6E/MpYd6IhN9s3VuF9O7c9KZoDVt8sIu3aoCAxjHn0SI7RyhokW2N1GpStO2Qd6hw2yffA9H3Wc7x1J5p2jIw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" referrerpolicy="no-referrer" />
+
     <style>
         * {
             margin: 0;
@@ -757,7 +758,7 @@
         let currentAuthor = '';
         let allQuotes = [];
         let filteredQuotes = [];
-        
+
         // Fallback quotes for offline/mobile compatibility
         const fallbackQuotes = [
             {text: "The only way to do great work is to love what you do.", author: "Steve Jobs"},
@@ -795,20 +796,25 @@
         // Fetch all quotes (for search functionality)
         async function loadAllQuotes() {
             try {
-                const response = await fetch('https://quotes-api-ruddy.vercel.app/quotes', {
-                    mode: 'cors',
-                    cache: 'no-store'
-                });
-                
+                let response;
+                try {
+                    // Try direct API first
+                    response = await fetch('https://quotes-api-ruddy.vercel.app/quotes');
+                } catch (directError) {
+                    // Fallback to CORS proxy if direct fails (e.g., CORS or network issues)
+                    console.warn('Direct /quotes failed, using proxy:', directError);
+                    response = await fetch('https://api.codetabs.com/v1/proxy?quest=https://quotes-api-ruddy.vercel.app/quotes');
+                }
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const result = await response.json();
                 // API shape: { success: true, data: [ { text, author, ... }, ... ] }
                 allQuotes = (result && Array.isArray(result.data)) ? result.data : [];
             } catch (error) {
-                console.error('Error loading all quotes:', error);
+                console.error('Error loading all quotes (using local fallback only):', error);
                 allQuotes = [];
             }
         }
@@ -898,16 +904,20 @@
             }
 
             try {
-                // Use direct API with explicit CORS options
-                const response = await fetch('https://quotes-api-ruddy.vercel.app/quotes/random', {
-                    mode: 'cors',
-                    cache: 'no-store'
-                });
-                
+                let response;
+                try {
+                    // Try direct API first
+                    response = await fetch('https://quotes-api-ruddy.vercel.app/quotes/random');
+                } catch (directError) {
+                    // Fallback to CORS proxy if direct fails (e.g., CORS or network issues)
+                    console.warn('Direct /quotes/random failed, using proxy:', directError);
+                    response = await fetch('https://api.codetabs.com/v1/proxy?quest=https://quotes-api-ruddy.vercel.app/quotes/random');
+                }
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const result = await response.json();
 
                 if (!result || !result.data || !result.data.text || !result.data.author) {
