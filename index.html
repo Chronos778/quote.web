@@ -646,9 +646,9 @@
         <div class="nav-container">
             <div class="logo">Quote.Web</div>
             <ul class="nav-links">
-                <li><a class="nav-link active" onclick="showSection('home')">Home</a></li>
-                <li><a class="nav-link" onclick="showSection('about')">About</a></li>
-                <li><a class="nav-link" onclick="showSection('contact')">Contact</a></li>
+                <li><a class="nav-link active" onclick="showSection(event, 'home')">Home</a></li>
+                <li><a class="nav-link" onclick="showSection(event, 'about')">About</a></li>
+                <li><a class="nav-link" onclick="showSection(event, 'contact')">Contact</a></li>
             </ul>
         </div>
     </nav>
@@ -694,7 +694,7 @@
                                 <div class="quote-author" id="quoteAuthor"></div>
                                 <div class="button-group">
                                     <button onclick="fetchQuote()">New Quote</button>
-                                    <button class="copy-btn" onclick="copyQuote()">Copy</button>
+                                    <button class="copy-btn" onclick="copyQuote(this)">Copy</button>
                                 </div>
                             </div>
                         </div>
@@ -773,7 +773,7 @@
         ];
 
         // Navigation
-        function showSection(sectionId) {
+        function showSection(e, sectionId) {
             // Hide all sections
             document.getElementById('home').style.display = 'none';
             document.getElementById('about').style.display = 'none';
@@ -786,20 +786,27 @@
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
-            event.target.classList.add('active');
+            if (e && e.target) {
+                e.preventDefault();
+                e.target.classList.add('active');
+            }
         }
 
         // Fetch all quotes (for search functionality)
         async function loadAllQuotes() {
             try {
-                const response = await fetch('https://api.codetabs.com/v1/proxy?quest=https://quotes-api-ruddy.vercel.app/quotes');
+                const response = await fetch('https://quotes-api-ruddy.vercel.app/quotes', {
+                    mode: 'cors',
+                    cache: 'no-store'
+                });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const result = await response.json();
-                allQuotes = result.data || [];
+                // API shape: { success: true, data: [ { text, author, ... }, ... ] }
+                allQuotes = (result && Array.isArray(result.data)) ? result.data : [];
             } catch (error) {
                 console.error('Error loading all quotes:', error);
                 allQuotes = [];
@@ -891,20 +898,21 @@
             }
 
             try {
-                // Try direct API first (no proxy)
-                let response;
-                try {
-                    response = await fetch('https://quotes-api-ruddy.vercel.app/quotes/random');
-                } catch (e) {
-                    // Fallback to proxy if direct fails
-                    response = await fetch('https://api.codetabs.com/v1/proxy?quest=https://quotes-api-ruddy.vercel.app/quotes/random');
-                }
+                // Use direct API with explicit CORS options
+                const response = await fetch('https://quotes-api-ruddy.vercel.app/quotes/random', {
+                    mode: 'cors',
+                    cache: 'no-store'
+                });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const result = await response.json();
+
+                if (!result || !result.data || !result.data.text || !result.data.author) {
+                    throw new Error('Unexpected API response shape');
+                }
 
                 currentQuote = result.data.text;
                 currentAuthor = result.data.author;
@@ -913,7 +921,7 @@
                 quoteAuthor.textContent = `— ${currentAuthor}`;
                 animateQuoteChange();
             } catch (error) {
-                console.error('Error fetching quote:', error);
+                console.error('Error fetching quote, using fallback:', error);
                 // Use fallback quotes
                 const randomFallback = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
                 currentQuote = randomFallback.text;
@@ -925,11 +933,11 @@
         }
 
         // Copy Quote
-        function copyQuote() {
+        function copyQuote(btn) {
             if (currentQuote) {
                 const textToCopy = `"${currentQuote}" — ${currentAuthor}`;
                 navigator.clipboard.writeText(textToCopy).then(() => {
-                    const btn = event.target;
+                    if (!btn) return;
                     const originalText = btn.textContent;
                     btn.textContent = '✓ Copied!';
                     setTimeout(() => {
