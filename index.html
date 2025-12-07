@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quote.Web — Daily Inspiration</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" referrerpolicy="no-referrer" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></noscript>
 
     <style>
         * {
@@ -63,6 +64,7 @@
             position: sticky;
             top: 0;
             z-index: 40;
+            -webkit-backdrop-filter: blur(22px);
             backdrop-filter: blur(22px);
             background: radial-gradient(circle at top, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.88));
             border-bottom: 1px solid rgba(148, 163, 184, 0.25);
@@ -178,11 +180,11 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(8px) scale(0.985);
+                transform: translateY(8px) scale(0.985) translateZ(0);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0) scale(1) translateZ(0);
             }
         }
 
@@ -334,6 +336,7 @@
         .tilt-card {
             transform-style: preserve-3d;
             cursor: grab;
+            will-change: transform;
         }
 
         .tilt-card:active {
@@ -567,6 +570,12 @@
             color: #fbbf24;
         }
 
+        .api-endpoint {
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
         @keyframes glowPulse {
             0%, 100% {
                 box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
@@ -723,7 +732,7 @@
                         <li>CORS enabled – call directly from the browser</li>
                     </ul>
 
-                    <p style="margin-top: 20px; font-size: 13px; color: var(--text-muted);">
+                    <p class="api-endpoint">
                         API endpoint:
                         <br>
                         <code>GET https://quotes-api-ruddy.vercel.app/quotes/random</code>
@@ -740,7 +749,7 @@
                         </div>
                         <div class="contact-item">
                             <h3>GitHub</h3>
-                            <p><a href="https://github.com/Chronos778" target="_blank">github.com/Chronos778</a></p>
+                            <p><a href="https://github.com/Chronos778" target="_blank" rel="noopener noreferrer">github.com/Chronos778</a></p>
                         </div>
                     </div>
                 </section>
@@ -986,18 +995,25 @@
             const tiltCards = document.querySelectorAll('.tilt-card');
             tiltCards.forEach(card => {
                 const strength = 18;
+                let ticking = false;
 
                 card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const midX = rect.width / 2;
-                    const midY = rect.height / 2;
+                    if (!ticking) {
+                        requestAnimationFrame(() => {
+                            const rect = card.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const y = e.clientY - rect.top;
+                            const midX = rect.width / 2;
+                            const midY = rect.height / 2;
 
-                    const rotateX = ((y - midY) / midY) * -strength;
-                    const rotateY = ((x - midX) / midX) * strength;
+                            const rotateX = ((y - midY) / midY) * -strength;
+                            const rotateY = ((x - midX) / midX) * strength;
 
-                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+                            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
                 });
 
                 card.addEventListener('mousedown', () => {
