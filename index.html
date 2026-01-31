@@ -336,7 +336,10 @@
 
         /* Dock (Bottom Actions) */
         .dock {
-            position: absolute;
+            position: fixed;
+            /* Fixed to viewport to prevent scrolling away */
+            left: 50%;
+            transform: translateX(-50%);
             bottom: 40px;
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -633,8 +636,16 @@
                 /* Dock sits above the dynamic sidebar */
                 width: auto;
                 left: 50%;
-                transform: translateX(-50%);
+                transform: translateX(-50%) !important;
+                /* Force center on mobile */
                 z-index: 60;
+                transition: none;
+                /* Disable hover float on touch */
+            }
+
+            .dock:hover {
+                transform: translateX(-50%) !important;
+                /* Prevent jump on tap */
             }
 
             .drawer {

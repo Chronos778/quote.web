@@ -94,7 +94,7 @@ quote.web/
 - Active state indicators
 - Mobile-friendly menu
 
-### Contact
+### Contact Information
 
 - Contact section with email and GitHub links
 
