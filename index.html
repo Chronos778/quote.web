@@ -510,19 +510,18 @@
                 flex-direction: row;
                 border-right: none;
                 border-top: 1px solid var(--border-dim);
-                padding: 0 20px;
-                justify-content: space-between;
-                background: rgba(5,5,5,0.95);
+                padding-bottom: 20px; /* Safe area for home indicator */
             }
             .sidebar:hover { width: 100%; } 
             .brand { display: none; }
             .nav-menu { flex-direction: row; flex: 1; justify-content: space-around; }
             .nav-label, .shortcut-hint { display: none !important; }
             .dock { 
-                bottom: 100px; /* moved up to clear bottom nav */
+                bottom: 120px; /* moved up further to avoid overlap */
                 width: auto;
                 left: 50%;
                 transform: translateX(-50%);
+                z-index: 60; /* Ensure above sidebar if needed */
             }
             .drawer { width: 100%; right: 0; }
         }
