@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quote.Web — Curator Dashboard</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;500;600&family=Manrope:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -21,24 +24,28 @@
             --bg-glass: rgba(20, 20, 20, 0.6);
             --border-dim: rgba(255, 255, 255, 0.08);
             --border-highlight: rgba(255, 255, 255, 0.15);
-            
+
             --text-main: #f3f4f6;
             --text-muted: #a1a1aa;
             --text-faint: #52525b;
-            
+
             --accent-primary: #8b5cf6;
             --accent-glow: rgba(139, 92, 246, 0.15);
             --accent-coral: #f472b6;
-            
+
             --font-display: 'Fraunces', serif;
             --font-ui: 'Manrope', sans-serif;
-            
+
             --sidebar-width: 260px;
             --sidebar-width-collapsed: 72px;
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             background-color: var(--bg-void);
@@ -70,25 +77,42 @@
             width: 2px;
             height: 2px;
             border-radius: 50%;
-            opacity: 0; /* Fade in via JS */
+            opacity: 0;
+            /* Fade in via JS */
             transition: opacity 1s ease;
-            box-shadow: 0 0 white; /* Placeholder */
+            box-shadow: 0 0 white;
+            /* Placeholder */
             animation: drift linear infinite;
-            will-change: transform; /* Hint to browser for performance */
+            will-change: transform;
+            /* Hint to browser for performance */
         }
 
-        .layer-1 { animation-duration: 120s; }
-        .layer-2 { animation-duration: 240s; }
-        .layer-3 { animation-duration: 360s; }
+        .layer-1 {
+            animation-duration: 120s;
+        }
+
+        .layer-2 {
+            animation-duration: 240s;
+        }
+
+        .layer-3 {
+            animation-duration: 360s;
+        }
 
         @keyframes drift {
-            from { transform: translateY(0); }
-            to { transform: translateY(-100vh); }
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-100vh);
+            }
         }
 
         /* --- Sidebar --- */
         .sidebar {
-            width: var(--sidebar-width-collapsed); /* Collapsed by default on mobile/small */
+            width: var(--sidebar-width-collapsed);
+            /* Collapsed by default on mobile/small */
             border-right: 1px solid var(--border-dim);
             display: flex;
             flex-direction: column;
@@ -99,8 +123,13 @@
         }
 
         @media (min-width: 768px) {
-            .sidebar { width: var(--sidebar-width-collapsed); }
-            .sidebar:hover { width: var(--sidebar-width); }
+            .sidebar {
+                width: var(--sidebar-width-collapsed);
+            }
+
+            .sidebar:hover {
+                width: var(--sidebar-width);
+            }
         }
 
         .brand {
@@ -131,7 +160,10 @@
             transition: all 0.3s ease;
         }
 
-        .sidebar:hover .brand-name { opacity: 1; transform: translateX(0); }
+        .sidebar:hover .brand-name {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
         .nav-menu {
             display: flex;
@@ -154,25 +186,32 @@
             text-decoration: none;
         }
 
-        .nav-item:hover, .nav-item.active {
+        .nav-item:hover,
+        .nav-item.active {
             background: var(--border-dim);
             color: var(--text-main);
         }
-        
+
         .nav-item.active {
             background: var(--accent-glow);
             color: #d8b4fe;
             border: 1px solid rgba(139, 92, 246, 0.1);
         }
 
-        .nav-icon { min-width: 20px; }
-        .nav-label { 
-            font-size: 14px; 
-            font-weight: 500; 
+        .nav-icon {
+            min-width: 20px;
+        }
+
+        .nav-label {
+            font-size: 14px;
+            font-weight: 500;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        .sidebar:hover .nav-label { opacity: 1; }
+
+        .sidebar:hover .nav-label {
+            opacity: 1;
+        }
 
         .shortcut-hint {
             margin-left: auto;
@@ -183,18 +222,27 @@
             color: var(--text-faint);
             opacity: 0;
         }
-        .sidebar:hover .shortcut-hint { opacity: 1; }
+
+        .sidebar:hover .shortcut-hint {
+            opacity: 1;
+        }
 
         /* --- Main Content --- */
         .workspace {
             flex: 1;
             position: relative;
-            z-index: 1; /* Place above background */
+            z-index: 1;
+            /* Place above background */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 40px;
+            overflow-y: auto;
+            /* Enable scrolling if content is tall */
+            overflow-x: hidden;
+            height: 100vh;
+            /* Ensure it takes full height to scroll internally */
         }
 
         /* Toolbar (Top Right) */
@@ -264,7 +312,7 @@
             -webkit-text-fill-color: transparent;
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
-        
+
         .quote-display.loading {
             opacity: 0.5;
             filter: blur(4px);
@@ -298,11 +346,13 @@
             border-radius: 20px;
             display: flex;
             gap: 8px;
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
             transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
         }
-        
-        .dock:hover { transform: translateY(-4px); }
+
+        .dock:hover {
+            transform: translateY(-4px);
+        }
 
         .dock-btn {
             border: none;
@@ -320,26 +370,35 @@
             transition: all 0.2s ease;
         }
 
-        .dock-btn:hover { background: var(--border-dim); }
+        .dock-btn:hover {
+            background: var(--border-dim);
+        }
 
         .dock-btn.primary {
             background: var(--text-main);
             color: var(--bg-void);
         }
-        .dock-btn.primary:hover { background: #d1d5db; }
+
+        .dock-btn.primary:hover {
+            background: #d1d5db;
+        }
 
         /* --- Overlays (Command Palette & Drawer) --- */
         .overlay-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
             z-index: 90;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;
         }
-        .overlay-backdrop.active { opacity: 1; pointer-events: auto; }
+
+        .overlay-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
         /* Command Palette */
         .cmd-palette {
@@ -352,7 +411,7 @@
             background: #0f0f11;
             border: 1px solid var(--border-highlight);
             border-radius: 16px;
-            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8);
             z-index: 100;
             opacity: 0;
             pointer-events: none;
@@ -403,12 +462,13 @@
             cursor: pointer;
             font-size: 14px;
         }
-        
-        .cmd-item:hover, .cmd-item.selected {
+
+        .cmd-item:hover,
+        .cmd-item.selected {
             background: var(--border-dim);
             color: var(--text-main);
         }
-        
+
         .cmd-kbd {
             font-size: 10px;
             padding: 2px 6px;
@@ -433,13 +493,15 @@
             display: flex;
             flex-direction: column;
         }
-        
-        .drawer.active { transform: translateX(0); }
+
+        .drawer.active {
+            transform: translateX(0);
+        }
 
         .drawer-header {
             margin-bottom: 40px;
         }
-        
+
         .drawer-title {
             font-family: var(--font-display);
             font-size: 32px;
@@ -463,7 +525,10 @@
             border-bottom: 1px solid rgba(139, 92, 246, 0.3);
             transition: border-color 0.2s;
         }
-        .drawer-content a:hover { border-color: var(--accent-primary); }
+
+        .drawer-content a:hover {
+            border-color: var(--accent-primary);
+        }
 
         .drawer-close {
             position: absolute;
@@ -477,8 +542,15 @@
 
         /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Toast */
@@ -498,40 +570,81 @@
             transition: all 0.3s var(--ease-out-expo);
             z-index: 200;
         }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
 
         @media (max-width: 640px) {
-            .workspace { padding: 20px; }
-            .sidebar { 
-                position: fixed; 
-                bottom: 0; 
-                width: 100%; 
-                height: auto; /* Allow growth */
+            .workspace {
+                padding: 20px 20px 160px 20px;
+                /* Clear the dock/sidebar */
+                justify-content: flex-start;
+                /* Start from top on mobile to avoid clipping */
+            }
+
+            .reader-container {
+                margin: auto 0;
+                /* Center vertically if space allows */
+            }
+
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                height: auto;
+                /* Allow growth */
                 min-height: 70px;
                 flex-direction: row;
-                align-items: center; /* Vertically center icons */
+                align-items: center;
+                /* Vertically center icons */
                 border-right: none;
                 border-top: 1px solid var(--border-dim);
-                padding: 12px 20px; /* Base padding */
-                padding-bottom: max(20px, env(safe-area-inset-bottom, 20px)); /* Dynamic safe area */
+                padding: 12px 20px;
+                /* Base padding */
+                padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+                /* Dynamic safe area */
                 justify-content: space-between;
-                background: rgba(5,5,5,0.95);
+                background: rgba(5, 5, 5, 0.95);
             }
-            .sidebar:hover { width: 100%; } 
-            .brand { display: none; }
-            .nav-menu { flex-direction: row; flex: 1; justify-content: space-around; }
-            .nav-label, .shortcut-hint { display: none !important; }
-            .dock { 
-                bottom: calc(90px + env(safe-area-inset-bottom, 20px)); /* Dock sits above the dynamic sidebar */
+
+            .sidebar:hover {
+                width: 100%;
+            }
+
+            .brand {
+                display: none;
+            }
+
+            .nav-menu {
+                flex-direction: row;
+                flex: 1;
+                justify-content: space-around;
+            }
+
+            .nav-label,
+            .shortcut-hint {
+                display: none !important;
+            }
+
+            .dock {
+                bottom: calc(90px + env(safe-area-inset-bottom, 20px));
+                /* Dock sits above the dynamic sidebar */
                 width: auto;
                 left: 50%;
                 transform: translateX(-50%);
-                z-index: 60; 
+                z-index: 60;
             }
-            .drawer { width: 100%; right: 0; }
+
+            .drawer {
+                width: 100%;
+                right: 0;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="bg-canvas">
@@ -652,11 +765,11 @@
             }
             // Add a duplicate set for seamless scrolling (simple hack)
             for (let i = 0; i < count; i++) {
-                const x = Math.floor(Math.random() * 100); 
+                const x = Math.floor(Math.random() * 100);
                 const y = Math.floor(Math.random() * 100) + 100; // Offset by 100vh
                 boxShadow += `${x}vw ${y}vh 0 ${color}, `;
             }
-            
+
             layer.style.boxShadow = boxShadow.slice(0, -2);
             layer.style.width = size;
             layer.style.height = size;
@@ -665,13 +778,13 @@
 
         // Generate 3 layers of stars (Optimized Counts)
         const isMobile = window.innerWidth < 768;
-        const counts = isMobile 
+        const counts = isMobile
             ? { l1: 20, l2: 10, l3: 4 }     // Mobile: ~34 stars (Clean & Minimal)
             : { l1: 400, l2: 150, l3: 40 }; // Desktop: ~590 stars
 
-        generateStars('stars1', counts.l1, '#fff', '1px');       
-        generateStars('stars2', counts.l2, '#eac7ff', '2px');    
-        generateStars('stars3', counts.l3, '#fbcfe8', '3px');     
+        generateStars('stars1', counts.l1, '#fff', '1px');
+        generateStars('stars2', counts.l2, '#eac7ff', '2px');
+        generateStars('stars3', counts.l3, '#fbcfe8', '3px');
 
         // State
         const API_BASE = "https://quotes-api-ruddy.vercel.app";
@@ -709,7 +822,7 @@
 
         async function fetchNewQuote() {
             ui.text.classList.add('loading');
-            
+
             try {
                 // Fetch random from API
                 const response = await fetch(`${API_BASE}/quotes/random`);
@@ -768,7 +881,7 @@
             if (allQuotes.length > 0 || isFetchingAll) return;
             isFetchingAll = true;
             ui.cmdInput.placeholder = "Loading 10,000+ quotes...";
-            
+
             try {
                 const response = await fetch(`${API_BASE}/quotes`);
                 const json = await response.json();
@@ -793,8 +906,8 @@
                 return;
             }
 
-            const results = allQuotes.filter(q => 
-                q.text.toLowerCase().includes(query) || 
+            const results = allQuotes.filter(q =>
+                q.text.toLowerCase().includes(query) ||
                 (q.author && q.author.toLowerCase().includes(query))
             ).slice(0, 50); // Limit to 50 results for performance
 
@@ -803,7 +916,7 @@
 
         function renderSearchResults(results) {
             ui.cmdResults.innerHTML = '';
-            
+
             if (results.length === 0 && ui.cmdInput.value.length >= 2) {
                 ui.cmdResults.innerHTML = '<div class="cmd-item" style="color: var(--text-muted)">No matches found.</div>';
                 return;
@@ -811,7 +924,7 @@
 
             // Default actions when empty
             if (results.length === 0) {
-                 ui.cmdResults.innerHTML = `
+                ui.cmdResults.innerHTML = `
                     <div class="cmd-item selected" onclick="fetchNewQuote(); closeAllOverlays()">
                         <span>Fetch new random quote</span>
                         <span class="cmd-kbd">Space</span>
@@ -847,7 +960,7 @@
             } else {
                 ui.backdrop.classList.add('active');
                 ui.palette.classList.add('active');
-                
+
                 // Initialize Search
                 if (allQuotes.length === 0) {
                     ui.cmdInput.disabled = true;
@@ -856,7 +969,7 @@
                     ui.cmdInput.disabled = false;
                     ui.cmdInput.focus();
                 }
-                
+
                 // Reset results to default
                 ui.cmdInput.value = '';
                 renderSearchResults([]);
@@ -864,7 +977,7 @@
         }
 
         function openDrawer(type) {
-            closeAllOverlays(); 
+            closeAllOverlays();
             ui.drawerBody.innerHTML = content[type];
             ui.backdrop.classList.add('active');
             ui.drawer.classList.add('active');
@@ -902,4 +1015,5 @@
 
     </script>
 </body>
+
 </html>
