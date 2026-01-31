@@ -8,27 +8,34 @@ A modern, dark, minimal website for daily inspiration. Browse random quotes with
 - **Command Palette (`Ctrl+K`)** - Instant search across the entire quote library
 - **Deep Void Theme** - A premium dark aesthetic with paralax starfield background
 - **Contextual Drawers** - Clean "About" and "Contact" sections that slide in
-- **Mobile Optimized** - Adaptive layout that works perfectly on all devices
+- **Mobile Optimized** - Adaptive layout with native safe-area support for all devices
+- **Performance First** - Intelligent resource scaling for 60fps animations on mobile
 - **One-Click Actions** - Copy, Share, and Fetch new quotes instantly
 
 ## Sections
 
 ### Home
+
 Your daily quote generator with powerful search capabilities. View random inspirational quotes, search by keyword, filter by author, or browse through matching results.
 
 ### About
+
 Learn about Quote.Web, our mission, features, and the technologies we use.
 
 ### Contact
+
 Connect with us through email or GitHub links.
 
 ## Getting Started
 
 ### Online
+
 Visit the live website at: [Quote.Web](https://chronos778.github.io/quote.web)
 
 ### Local Setup
+
 1. Clone this repository:
+
    ```bash
    git clone https://github.com/Chronos778/quote.web.git
    cd quote.web
@@ -41,6 +48,7 @@ Visit the live website at: [Quote.Web](https://chronos778.github.io/quote.web)
 ## How It Works
 
 Quote.Web fetches quotes from the [Quotes API](https://quotes-api-ruddy.vercel.app) using a CORS proxy:
+
 - **Random quotes** are fetched from `/quotes/random` endpoint
 - **Search & filter** queries the full `/quotes` endpoint and filters client-side
 - Results display instantly with smooth animations and a beautiful minimal interface
@@ -54,7 +62,7 @@ Quote.Web fetches quotes from the [Quotes API](https://quotes-api-ruddy.vercel.a
 
 ## Project Structure
 
-```
+```text
 quote.web/
 ├── index.html       # Main website with all sections
 ├── README.md        # Project documentation
@@ -65,11 +73,13 @@ quote.web/
 ## Features in Detail
 
 ### Quote Display
+
 - Automatic quote loading on page visit
 - Smooth fade-in animations
 - Clean typography and spacing
 
 ### Search & Filter
+
 - Search quotes by keyword (searches quote text)
 - Filter quotes by author name
 - Real-time filtering across entire database
@@ -78,12 +88,14 @@ quote.web/
 - Clear button to reset filters
 
 ### Navigation
+
 - Sticky navigation bar
 - Easy section switching
 - Active state indicators
 - Mobile-friendly menu
 
 ### Contact
+
 - Contact section with email and GitHub links
 
 ## Browser Support
@@ -106,6 +118,7 @@ quote.web/
 ## Contributing
 
 Contributions are welcome! Feel free to:
+
 - Report bugs
 - Suggest new features
 - Submit pull requests
@@ -121,4 +134,4 @@ Created by [Chronos778](https://github.com/Chronos778)
 
 ---
 
-**Built with ❤️ for daily inspiration**
+### Built with ❤️ for daily inspiration

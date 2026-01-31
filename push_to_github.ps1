@@ -1,3 +1,3 @@
 git add .
-git commit -m "feat: redesign UI with immersive reader, command palette, and starfield animation"
+git commit -m "some changes"
 git push origin main
