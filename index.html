@@ -3,1033 +3,899 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quote.Web — Daily Inspiration</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" referrerpolicy="no-referrer" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></noscript>
+    <title>Quote.Web — Curator Dashboard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            /* Palette - Deep Void Theme */
+            --bg-void: #050505;
+            --bg-panel: #0e0e0e;
+            --bg-glass: rgba(20, 20, 20, 0.6);
+            --border-dim: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(255, 255, 255, 0.15);
+            
+            --text-main: #f3f4f6;
+            --text-muted: #a1a1aa;
+            --text-faint: #52525b;
+            
+            --accent-primary: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.15);
+            --accent-coral: #f472b6;
+            
+            --font-display: 'Fraunces', serif;
+            --font-ui: 'Manrope', sans-serif;
+            
+            --sidebar-width: 260px;
+            --sidebar-width-collapsed: 72px;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        :root {
-            --bg: #020617;
-            --bg-alt: #020617;
-            --surface: rgba(15, 23, 42, 0.94);
-            --surface-soft: rgba(15, 23, 42, 0.9);
-            --accent: #6366f1;
-            --accent-soft: rgba(99, 102, 241, 0.16);
-            --accent-alt: #c7d2fe;
-            --text: #e5e7eb;
-            --text-muted: #9ca3af;
-            --border-subtle: rgba(148, 163, 184, 0.35);
-            --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
-            --radius-xl: 26px;
-            --radius-lg: 18px;
-            --radius-md: 12px;
-            --nav-height: 78px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-            color: var(--text);
-            line-height: 1.6;
-            background:
-                radial-gradient(circle at 0% 0%, rgba(51, 65, 85, 0.7), transparent 55%),
-                radial-gradient(circle at 100% 10%, rgba(30, 64, 175, 0.45), transparent 55%),
-                radial-gradient(circle at 50% 100%, rgba(15, 23, 42, 0.95), transparent 55%),
-                linear-gradient(145deg, #020617 0%, #020617 40%, #020617 100%);
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
+            background-color: var(--bg-void);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
         }
 
-        /* Global chrome */
-        body::before {
-            content: "";
+        ::selection {
+            background-color: var(--accent-primary);
+            color: white;
+        }
+
+        /* Background Animation */
+        .bg-canvas {
             position: fixed;
             inset: 0;
+            z-index: 0;
+            background: transparent;
             pointer-events: none;
-            background:
-                radial-gradient(circle at 0% 100%, rgba(51, 65, 85, 0.6), transparent 55%),
-                radial-gradient(circle at 100% 100%, rgba(30, 64, 175, 0.4), transparent 55%);
-            mix-blend-mode: soft-light;
-            opacity: 0.7;
-            z-index: -1;
         }
 
-        /* Navigation */
-        nav {
-            position: sticky;
+        .star-layer {
+            position: absolute;
             top: 0;
-            z-index: 40;
-            -webkit-backdrop-filter: blur(22px);
-            backdrop-filter: blur(22px);
-            background: radial-gradient(circle at top, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.88));
-            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+            left: 0;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            opacity: 0; /* Fade in via JS */
+            transition: opacity 1s ease;
+            box-shadow: 0 0 white; /* Placeholder */
+            animation: drift linear infinite;
+            will-change: transform; /* Hint to browser for performance */
         }
 
-        nav .nav-container {
-            max-width: 1080px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 32px;
+        .layer-1 { animation-duration: 120s; }
+        .layer-2 { animation-duration: 240s; }
+        .layer-3 { animation-duration: 360s; }
+
+        @keyframes drift {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100vh); }
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--text);
-        }
-
-        .logo-mark {
-            width: 26px;
-            height: 26px;
-            border-radius: 30px;
-            background: conic-gradient(from 210deg, #64748b, #6366f1, #22c55e, #64748b);
-            position: relative;
-            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7), 0 12px 24px rgba(15, 23, 42, 0.9);
-            overflow: hidden;
-        }
-
-        .logo-mark::after {
-            content: "";
-            position: absolute;
-            inset: 2px;
-            border-radius: inherit;
-            background: radial-gradient(circle at 30% 0%, rgba(248, 250, 252, 0.7), transparent 45%),
-                        radial-gradient(circle at 70% 100%, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1));
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 28px;
-            list-style: none;
-            padding: 4px 6px;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.66);
-            box-shadow: 0 10px 36px rgba(15, 23, 42, 0.9);
-        }
-
-        .nav-links a {
-            position: relative;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            cursor: pointer;
-            padding: 7px 14px;
-            border-radius: 999px;
-            transition: color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--text);
-            transform: translateY(-1px);
-            background: rgba(15, 23, 42, 0.85);
-        }
-
-        .nav-links a.active {
-            color: #020617;
-            background: linear-gradient(120deg, #e5e7eb, #c7d2fe, #a5b4fc);
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.85);
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1080px;
-            margin: 0 auto;
-            padding: 48px 32px 56px;
-            min-height: calc(100vh - var(--nav-height));
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width-collapsed); /* Collapsed by default on mobile/small */
+            border-right: 1px solid var(--border-dim);
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            padding: 24px 12px;
+            background: var(--bg-void);
+            z-index: 50;
+            transition: width 0.4s var(--ease-out-expo);
         }
 
-        .shell {
-            display: grid;
-            grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
-            gap: 28px;
-            align-items: stretch;
+        @media (min-width: 768px) {
+            .sidebar { width: var(--sidebar-width-collapsed); }
+            .sidebar:hover { width: var(--sidebar-width); }
         }
 
-        /* Section visibility */
-        #home {
-            display: block;
-        }
-
-        #about,
-        #contact {
-            display: none;
-        }
-
-        .section {
-            animation: fadeIn 0.45s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px) scale(0.985) translateZ(0);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1) translateZ(0);
-            }
-        }
-
-        /* Home / Hero */
-        .header {
-            margin-bottom: 28px;
-            text-align: left;
-        }
-
-        .kicker {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(148, 163, 184, 0.45);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: var(--text-muted);
-        }
-
-        .kicker-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 999px;
-            background: radial-gradient(circle at 30% 0%, #f9fafb, var(--accent));
-            box-shadow: 0 0 0 4px rgba(248, 250, 252, 0.08);
-        }
-
-        .header h1 {
-            font-size: clamp(32px, 4vw, 40px);
-            font-weight: 650;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--text);
-            margin: 20px 0 10px;
-        }
-
-        .header-subtitle {
-            max-width: 460px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .hero-shell {
-            background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.12), transparent 52%),
-                        radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.98), #020617);
-            border-radius: var(--radius-xl);
-            padding: 26px 26px 24px;
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            box-shadow: var(--shadow-soft);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
-                        box-shadow 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
-                        border-color 0.25s ease;
-        }
-
-        .hero-shell::before {
-            content: "";
-            position: absolute;
-            inset: -40%;
-            background:
-                radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.16), transparent 55%),
-                radial-gradient(circle at 100% 0%, rgba(255, 107, 0, 0.24), transparent 55%);
-            opacity: 0.75;
-            mix-blend-mode: screen;
-        }
-
-        .hero-shell-inner {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Search Container */
-        .search-container {
-            margin-bottom: 26px;
-        }
-
-        .search-label-row {
+        .brand {
+            height: 48px;
             display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 10px;
+            align-items: center;
             gap: 16px;
-        }
-
-        .search-label-row span {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: var(--text-muted);
-        }
-
-        .search-meta {
-            font-size: 11px;
-            color: rgba(148, 163, 184, 0.9);
-        }
-
-        .search-box {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .search-box input {
-            flex: 1;
-            min-width: 200px;
-            padding: 11px 14px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            background: rgba(15, 23, 42, 0.85);
-            color: var(--text);
-            font-family: inherit;
-            font-size: 13px;
-            transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease, transform 0.12s ease;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.7), 0 0 0 12px rgba(249, 115, 22, 0.15);
-            background: rgba(15, 23, 42, 0.95);
-            transform: translateY(-1px);
-        }
-
-        .search-box input::placeholder {
-            color: rgba(148, 163, 184, 0.9);
-        }
-
-        .quote-shell {
-            margin-top: 22px;
-            padding: 20px 22px 22px;
-            border-radius: var(--radius-lg);
-            background: radial-gradient(circle at 0% 0%, rgba(148, 163, 184, 0.22), transparent 55%),
-                        linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
-            border: 1px solid rgba(148, 163, 184, 0.5);
-            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.96);
-            position: relative;
+            padding-left: 12px;
+            margin-bottom: 32px;
             overflow: hidden;
-            animation: glowPulse 9s ease-in-out infinite;
+            white-space: nowrap;
         }
 
-        .tilt-card {
-            transform-style: preserve-3d;
-            cursor: grab;
-            will-change: transform;
+        .brand-logo {
+            min-width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-coral));
+            border-radius: 6px;
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        .tilt-card:active {
-            cursor: grabbing;
+        .brand-name {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            font-size: 16px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
         }
 
-        .quote-shell::before {
-            content: "";
-            position: absolute;
-            inset: -40%;
-            background: radial-gradient(circle at 0% 0%, rgba(148, 163, 184, 0.26), transparent 55%);
-            opacity: 0.24;
-            mix-blend-mode: screen;
+        .sidebar:hover .brand-name { opacity: 1; transform: translateX(0); }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
         }
 
-        .quote-shell-inner {
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            border-radius: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--border-dim);
+            color: var(--text-main);
+        }
+        
+        .nav-item.active {
+            background: var(--accent-glow);
+            color: #d8b4fe;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .nav-icon { min-width: 20px; }
+        .nav-label { 
+            font-size: 14px; 
+            font-weight: 500; 
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar:hover .nav-label { opacity: 1; }
+
+        .shortcut-hint {
+            margin-left: auto;
+            font-size: 10px;
+            background: var(--border-dim);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--text-faint);
+            opacity: 0;
+        }
+        .sidebar:hover .shortcut-hint { opacity: 1; }
+
+        /* --- Main Content --- */
+        .workspace {
+            flex: 1;
             position: relative;
-            z-index: 1;
+            z-index: 1; /* Place above background */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
         }
 
-        .quote-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: rgba(148, 163, 184, 0.95);
-            margin-bottom: 12px;
+        /* Toolbar (Top Right) */
+        .toolbar {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            display: flex;
+            gap: 12px;
         }
 
-        .quote-text {
-            font-size: clamp(22px, 3.1vw, 28px);
-            font-weight: 450;
-            margin-bottom: 18px;
-            color: var(--text);
-            line-height: 1.7;
-            min-height: 96px;
+        .tool-btn {
+            background: transparent;
+            border: 1px solid var(--border-dim);
+            color: var(--text-muted);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
         }
 
-        .quote-author {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 26px;
-            font-weight: 400;
-            letter-spacing: 0.12em;
-            text-align: center;
-            text-transform: uppercase;
+        .tool-btn:hover {
+            border-color: var(--text-muted);
+            color: var(--text-main);
+            background: var(--border-dim);
         }
 
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        button {
-            position: relative;
-            background: radial-gradient(circle at 0% 0%, #e5e7eb, var(--accent)),
-                        radial-gradient(circle at 100% 100%, #9ca3af, #64748b);
-            color: #020617;
-            border: none;
-            padding: 10px 26px;
-            font-size: 11px;
-            font-weight: 600;
-            border-radius: 999px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease, background-position 0.18s ease;
-            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.9);
-            background-size: 180% 180%;
-            background-position: 0% 50%;
-            overflow: hidden;
-        }
-
-        button::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            border: 1px solid rgba(248, 250, 252, 0.2);
-            box-shadow: 0 0 0 0 rgba(248, 250, 252, 0.45);
-            opacity: 0;
-            transition: opacity 0.2s ease, box-shadow 0.2s ease;
-            pointer-events: none;
-        }
-
-        button:hover {
-            transform: translateY(-1.5px) scale(1.01);
-            filter: brightness(1.04);
-            background-position: 100% 50%;
-            box-shadow: 0 20px 45px rgba(249, 115, 22, 0.75);
-        }
-
-        button:hover::after {
-            opacity: 1;
-            box-shadow: 0 0 24px 0 rgba(250, 250, 250, 0.55);
-        }
-
-        button:active {
-            transform: translateY(0.5px) scale(0.99);
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
-        }
-
-        .copy-btn {
-            background: rgba(15, 23, 42, 0.95);
-            color: var(--text-muted);
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.95);
-            border: 1px solid rgba(148, 163, 184, 0.65);
-        }
-
-        .copy-btn:hover {
-            background: rgba(15, 23, 42, 1);
-            color: var(--text);
-            border-color: rgba(248, 250, 252, 0.9);
-        }
-
-        /* Right column: About / Contact layout wrapper */
-        .side-panel {
+        /* Reader View */
+        .reader-container {
+            max-width: 800px;
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.8s var(--ease-out-expo);
         }
 
-        .side-card {
-            padding: 22px 22px 20px;
-            border-radius: var(--radius-lg);
-            background: radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.09), transparent 52%),
-                        linear-gradient(135deg, rgba(15, 23, 42, 0.97), rgba(15, 23, 42, 0.9));
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            box-shadow: var(--shadow-soft);
-            transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
-                        box-shadow 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
-                        border-color 0.25s ease;
-        }
-
-        .hero-shell:hover {
-            box-shadow: 0 26px 70px rgba(15, 23, 42, 1);
-            border-color: rgba(248, 250, 252, 0.55);
-        }
-
-        .side-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 55px rgba(15, 23, 42, 0.95);
-            border-color: rgba(248, 250, 252, 0.45);
-        }
-
-        .side-card h2 {
-            font-size: 18px;
-            margin-bottom: 16px;
-            font-weight: 550;
-            letter-spacing: 0.12em;
+        .quote-badge {
+            font-size: 11px;
             text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent-primary);
+            margin-bottom: 32px;
+            font-weight: 600;
+            padding: 6px 12px;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: full;
+            border: 1px solid rgba(139, 92, 246, 0.1);
         }
 
-        #about h2,
-        #contact h2 {
-            font-size: 18px;
-            margin-bottom: 16px;
-            font-weight: 550;
+        .quote-display {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 5vw, 56px);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            font-weight: 400;
+            /* Text gradient */
+            background: radial-gradient(circle at center, #fff, #a1a1aa);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .quote-display.loading {
+            opacity: 0.5;
+            filter: blur(4px);
+            transform: scale(0.98);
         }
 
-        #about p {
-            font-size: 14px;
-            line-height: 1.8;
-            margin-bottom: 18px;
+        .author-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 500;
         }
 
-        .features-list {
-            margin: 24px 0 10px;
-            list-style: none;
+        .author-line {
+            width: 32px;
+            height: 1px;
+            background: var(--border-highlight);
         }
 
-        .features-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        /* Dock (Bottom Actions) */
+        .dock {
+            position: absolute;
+            bottom: 40px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-highlight);
+            padding: 8px;
+            border-radius: 20px;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+            transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+        }
+        
+        .dock:hover { transform: translateY(-4px); }
+
+        .dock-btn {
+            border: none;
+            background: transparent;
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-family: var(--font-ui);
             font-size: 14px;
-            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s ease;
         }
 
-        .features-list li:before {
-            content: "";
-            width: 7px;
-            height: 7px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #e5e7eb, #c7d2fe, #94a3b8);
-            box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.4);
+        .dock-btn:hover { background: var(--border-dim); }
+
+        .dock-btn.primary {
+            background: var(--text-main);
+            color: var(--bg-void);
+        }
+        .dock-btn.primary:hover { background: #d1d5db; }
+
+        /* --- Overlays (Command Palette & Drawer) --- */
+        .overlay-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .overlay-backdrop.active { opacity: 1; pointer-events: auto; }
+
+        /* Command Palette */
+        .cmd-palette {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            width: 90%;
+            max-width: 600px;
+            background: #0f0f11;
+            border: 1px solid var(--border-highlight);
+            border-radius: 16px;
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s var(--ease-out-expo);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: 80vh;
         }
 
-        /* Contact Section */
-        #contact h2 {
-            margin-bottom: 22px;
+        .cmd-palette.active {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .contact-info {
-            margin-bottom: 28px;
+        .cmd-input-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-dim);
+            gap: 12px;
         }
 
-        .contact-item {
-            margin-bottom: 18px;
+        .cmd-input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 16px;
+            font-family: var(--font-ui);
+            flex: 1;
+            outline: none;
         }
 
-        .contact-item h3 {
-            font-size: 11px;
-            font-weight: 650;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
+        .cmd-results {
+            padding: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .cmd-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 8px;
             color: var(--text-muted);
-        }
-
-        .contact-item p {
+            cursor: pointer;
             font-size: 14px;
-            color: var(--text);
+        }
+        
+        .cmd-item:hover, .cmd-item.selected {
+            background: var(--border-dim);
+            color: var(--text-main);
+        }
+        
+        .cmd-kbd {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: #27272a;
+            border-radius: 4px;
         }
 
-        .contact-item a {
-            color: var(--accent-alt);
+        /* Side Drawer */
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 400px;
+            max-width: 100vw;
+            background: #0f0f11;
+            border-left: 1px solid var(--border-dim);
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.4s var(--ease-out-expo);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .drawer.active { transform: translateX(0); }
+
+        .drawer-header {
+            margin-bottom: 40px;
+        }
+        
+        .drawer-title {
+            font-family: var(--font-display);
+            font-size: 32px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #a1a1aa);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .drawer-content p {
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .drawer-content a {
+            color: var(--accent-primary);
             text-decoration: none;
-            border-bottom: 1px solid rgba(165, 180, 252, 0.8);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+            transition: border-color 0.2s;
+        }
+        .drawer-content a:hover { border-color: var(--accent-primary); }
+
+        .drawer-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
         }
 
-        .contact-item a:hover {
-            color: #fbbf24;
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .api-endpoint {
-            margin-top: 20px;
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text-main);
+            color: var(--bg-void);
+            padding: 10px 24px;
+            border-radius: 99px;
+            font-weight: 600;
             font-size: 13px;
-            color: var(--text-muted);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s var(--ease-out-expo);
+            z-index: 200;
         }
-
-        @keyframes glowPulse {
-            0%, 100% {
-                box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
-                border-color: rgba(148, 163, 184, 0.45);
-            }
-            50% {
-                box-shadow: 0 28px 70px rgba(15, 23, 42, 1), 0 0 26px rgba(248, 250, 252, 0.15);
-                border-color: rgba(248, 250, 252, 0.7);
-            }
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid rgba(148, 163, 184, 0.35);
-            padding: 22px 32px 28px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 11px;
-            background: radial-gradient(circle at 50% -60%, rgba(15, 23, 42, 0.3), rgba(15, 23, 42, 0.98));
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .container {
-                padding: 32px 20px 40px;
-            }
-
-            .shell {
-                grid-template-columns: minmax(0, 1fr);
-            }
-
-            .hero-shell {
-                order: -1;
-            }
-        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         @media (max-width: 640px) {
-            nav .nav-container {
-                flex-direction: column;
-                gap: 14px;
-                padding: 14px 18px 16px;
+            .workspace { padding: 20px; }
+            .sidebar { 
+                position: fixed; 
+                bottom: 0; 
+                width: 100%; 
+                height: 70px;
+                flex-direction: row;
+                border-right: none;
+                border-top: 1px solid var(--border-dim);
+                padding: 0 20px;
+                justify-content: space-between;
+                background: rgba(5,5,5,0.95);
             }
-
-            .container {
-                padding: 24px 16px 36px;
+            .sidebar:hover { width: 100%; } 
+            .brand { display: none; }
+            .nav-menu { flex-direction: row; flex: 1; justify-content: space-around; }
+            .nav-label, .shortcut-hint { display: none !important; }
+            .dock { 
+                bottom: 100px; /* moved up to clear bottom nav */
+                width: auto;
+                left: 50%;
+                transform: translateX(-50%);
             }
-
-            .hero-shell {
-                padding: 20px 18px 18px;
-                border-radius: 20px;
-            }
-
-            .quote-shell {
-                padding: 16px 14px 18px;
-                border-radius: 18px;
-            }
-
-            .quote-text {
-                font-size: 18px;
-                min-height: 72px;
-            }
-
-            .nav-links {
-                width: 100%;
-                justify-content: center;
-            }
-
-            button {
-                padding-inline: 20px;
-                font-size: 10px;
-            }
+            .drawer { width: 100%; right: 0; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">Quote.Web</div>
-            <ul class="nav-links">
-                <li><a class="nav-link active" onclick="showSection(event, 'home')">Home</a></li>
-                <li><a class="nav-link" onclick="showSection(event, 'about')">About</a></li>
-                <li><a class="nav-link" onclick="showSection(event, 'contact')">Contact</a></li>
-            </ul>
+
+    <div class="bg-canvas">
+        <div id="stars1" class="star-layer layer-1"></div>
+        <div id="stars2" class="star-layer layer-2"></div>
+        <div id="stars3" class="star-layer layer-3"></div>
+    </div>
+    <div class="grain"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="brand">
+            <div class="brand-logo"></div>
+            <span class="brand-name">Quote.Web</span>
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="closeDrawer()">
+                <i data-lucide="layout-grid" class="nav-icon"></i>
+                <span class="nav-label">Discover</span>
+            </div>
+            <div class="nav-item" onclick="toggleCommandPalette()">
+                <i data-lucide="search" class="nav-icon"></i>
+                <span class="nav-label">Search</span>
+                <span class="shortcut-hint">Ctrl K</span>
+            </div>
+            <div class="nav-item" onclick="openDrawer('about')">
+                <i data-lucide="info" class="nav-icon"></i>
+                <span class="nav-label">About</span>
+            </div>
+            <div class="nav-item" onclick="openDrawer('contact')">
+                <i data-lucide="mail" class="nav-icon"></i>
+                <span class="nav-label">Contact</span>
+            </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="shell">
-            <!-- Left: Home / Hero -->
-            <section id="home" class="section animate__animated animate__fadeInUp animate__faster">
-                <div class="hero-shell tilt-card">
-                    <div class="hero-shell-inner">
-                        <div class="header">
-                            <div class="kicker">
-                                <span class="kicker-dot"></span>
-                                Daily quote engine
-                            </div>
-                            <h1>Daily Inspiration</h1>
-                            <p class="header-subtitle">
-                                Discover a new quote every time you visit. Search by keyword, filter by author,
-                                and keep your favorite lines a click away.
-                            </p>
-                        </div>
+    <!-- Main Workspace -->
+    <main class="workspace">
+        <!-- Reader View -->
+        <article class="reader-container">
+            <div class="quote-badge">Daily Inspiration</div>
+            <h1 class="quote-display" id="quote-text">
+                "The only way to do great work is to love what you do."
+            </h1>
+            <div class="author-block">
+                <div class="author-line"></div>
+                <span id="quote-author">Steve Jobs</span>
+            </div>
+        </article>
 
-                        <!-- Search/Filter Section -->
-                        <div class="search-container">
-                            <div class="search-label-row">
-                                <span>Search & filter</span>
-                                <span class="search-meta">Powered by Quotes API · 10,000+ curated quotes</span>
-                            </div>
-                            <div class="search-box">
-                                <input type="text" id="searchKeyword" placeholder="Search by keyword..." />
-                                <input type="text" id="searchAuthor" placeholder="Filter by author..." />
-                                <button onclick="searchQuotes()">Search</button>
-                                <button class="copy-btn" onclick="clearSearch()">Clear</button>
-                            </div>
-                        </div>
+        <!-- Floating Dock -->
+        <div class="dock">
+            <button class="dock-btn" onclick="copyQuote()">
+                <i data-lucide="copy" size="16"></i>
+            </button>
+            <button class="dock-btn" onclick="shareQuote()">
+                <i data-lucide="share-2" size="16"></i>
+            </button>
+            <div style="width: 1px; height: 24px; background: var(--border-dim); margin: 0 4px;"></div>
+            <button class="dock-btn primary" onclick="fetchNewQuote()">
+                <span>Fresh Quote</span>
+                <i data-lucide="arrow-right" size="16"></i>
+            </button>
+        </div>
+    </main>
 
-                        <!-- Quote Card -->
-                        <div class="quote-shell tilt-card">
-                            <div class="quote-shell-inner">
-                                <div class="quote-label">Today&apos;s pull</div>
-                                <div class="quote-text" id="quoteText">Loading...</div>
-                                <div class="quote-author" id="quoteAuthor"></div>
-                                <div class="button-group">
-                                    <button onclick="fetchQuote()">New Quote</button>
-                                    <button class="copy-btn" onclick="copyQuote(this)">Copy</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    <!-- Overlays -->
+    <div class="overlay-backdrop" id="backdrop" onclick="closeAllOverlays()"></div>
 
-            <!-- Right: Side Panel (About & Contact) -->
-            <aside class="side-panel">
-                <!-- About Section -->
-                <section id="about" class="section side-card animate__animated animate__fadeInUp animate__fast">
-                    <h2>About This Project</h2>
-                    <p>Welcome to Quote.Web, a focused space for daily inspiration. Behind this clean interface is a fast
-                    and free Quotes API tailored for developers.</p>
-
-                    <p>This project is powered by our custom-built <strong>Quotes API</strong> – a RESTful service that
-                    delivers inspirational quotes to any platform. Drop it into your web apps, CLIs, dashboards, or
-                    mobile projects in seconds.</p>
-
-                    <ul class="features-list">
-                        <li>Free to use with no authentication required</li>
-                        <li>Fast and reliable with 99.9% uptime</li>
-                        <li>Large collection of inspiring quotes from various authors</li>
-                        <li>Simple RESTful endpoints and JSON responses</li>
-                        <li>CORS enabled – call directly from the browser</li>
-                    </ul>
-
-                    <p class="api-endpoint">
-                        API endpoint:
-                        <br>
-                        <code>GET https://quotes-api-ruddy.vercel.app/quotes/random</code>
-                    </p>
-                </section>
-
-                <!-- Contact Section -->
-                <section id="contact" class="section side-card animate__animated animate__fadeInUp animate__fast">
-                    <h2>Get In Touch</h2>
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <h3>Email</h3>
-                            <p><a href="mailto:maithilpatil9@gmail.com">maithilpatil9@gmail.com</a></p>
-                        </div>
-                        <div class="contact-item">
-                            <h3>GitHub</h3>
-                            <p><a href="https://github.com/Chronos778" target="_blank" rel="noopener noreferrer">github.com/Chronos778</a></p>
-                        </div>
-                    </div>
-                </section>
-            </aside>
+    <!-- Command Palette -->
+    <div class="cmd-palette" id="cmd-palette">
+        <div class="cmd-input-wrapper">
+            <i data-lucide="search" size="18" style="color: var(--text-muted)"></i>
+            <input type="text" class="cmd-input" placeholder="Search functionality coming soon..." disabled>
+            <span class="cmd-kbd">ESC</span>
+        </div>
+        <div class="cmd-results">
+            <!-- Simulated Results -->
+            <div class="cmd-item selected" onclick="fetchNewQuote(); closeAllOverlays()">
+                <span>Fetch new random quote</span>
+                <span class="cmd-kbd">Space</span>
+            </div>
+            <div class="cmd-item" onclick="openDrawer('about'); closeAllOverlays(true)">
+                <span>Read about project</span>
+            </div>
+            <div class="cmd-item" onclick="copyQuote(); closeAllOverlays()">
+                <span>Copy current quote</span>
+                <span class="cmd-kbd">Ctrl C</span>
+            </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Quote.Web. All rights reserved. | Built with passion and minimal code.</p>
-    </footer>
+    <!-- Side Drawer -->
+    <aside class="drawer" id="side-drawer">
+        <button class="drawer-close" onclick="closeDrawer()">
+            <i data-lucide="x" size="24"></i>
+        </button>
+        <div class="drawer-content" id="drawer-body">
+            <!-- Content Injected via JS -->
+        </div>
+    </aside>
 
+    <div class="toast" id="toast">Copied to clipboard</div>
+
+    <!-- Logic -->
     <script>
-        let currentQuote = '';
-        let currentAuthor = '';
-        let allQuotes = [];
-        let filteredQuotes = [];
+        // Init Icons
+        lucide.createIcons();
 
-        // Fallback quotes for offline/mobile compatibility
-        const fallbackQuotes = [
-            {text: "The only way to do great work is to love what you do.", author: "Steve Jobs"},
-            {text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill"},
-            {text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt"},
-            {text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt"},
-            {text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius"},
-            {text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair"},
-            {text: "Believe in yourself. You are braver than you think, more talented than you know, and capable of more than you imagine.", author: "Roy T. Bennett"},
-            {text: "I learned that courage was not the absence of fear, but the triumph over it.", author: "Nelson Mandela"},
-            {text: "Success is not how high you have climbed, but how you make a positive difference to the world.", author: "Roy T. Bennett"},
-            {text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson"}
-        ];
-
-        // Navigation
-        function showSection(e, sectionId) {
-            // Hide all sections
-            document.getElementById('home').style.display = 'none';
-            document.getElementById('about').style.display = 'none';
-            document.getElementById('contact').style.display = 'none';
-
-            // Show selected section
-            document.getElementById(sectionId).style.display = 'block';
-
-            // Update active nav link
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            if (e && e.target) {
-                e.preventDefault();
-                e.target.classList.add('active');
+        // --- Star Generation ---
+        function generateStars(layerId, count, color, size) {
+            const layer = document.getElementById(layerId);
+            let boxShadow = '';
+            for (let i = 0; i < count; i++) {
+                const x = Math.floor(Math.random() * 100); // vw
+                const y = Math.floor(Math.random() * 100); // vh
+                boxShadow += `${x}vw ${y}vh 0 ${color}, `;
             }
-        }
-
-        // Fetch all quotes (for search functionality)
-        async function loadAllQuotes() {
-            try {
-                let response;
-                try {
-                    // Try direct API first
-                    response = await fetch('https://quotes-api-ruddy.vercel.app/quotes');
-                } catch (directError) {
-                    // Fallback to CORS proxy if direct fails (e.g., CORS or network issues)
-                    console.warn('Direct /quotes failed, using proxy:', directError);
-                    response = await fetch('https://api.codetabs.com/v1/proxy?quest=https://quotes-api-ruddy.vercel.app/quotes');
-                }
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                // API shape: { success: true, data: [ { text, author, ... }, ... ] }
-                allQuotes = (result && Array.isArray(result.data)) ? result.data : [];
-            } catch (error) {
-                console.error('Error loading all quotes (using local fallback only):', error);
-                allQuotes = [];
-            }
-        }
-
-        // Search quotes by keyword or author
-        async function searchQuotes() {
-            const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
-            const author = document.getElementById('searchAuthor').value.trim().toLowerCase();
-            const quoteText = document.getElementById('quoteText');
-            const quoteAuthor = document.getElementById('quoteAuthor');
-
-            if (!keyword && !author) {
-                quoteText.textContent = 'Please enter a keyword or author to search.';
-                quoteAuthor.textContent = '';
-                return;
-            }
-
-            quoteText.textContent = 'Searching...';
-            quoteAuthor.textContent = '';
-
-            // Load all quotes if not already loaded
-            if (allQuotes.length === 0) {
-                await loadAllQuotes();
-            }
-
-            // Filter quotes
-            filteredQuotes = allQuotes.filter(quote => {
-                const matchesKeyword = !keyword || quote.text.toLowerCase().includes(keyword);
-                const matchesAuthor = !author || quote.author.toLowerCase().includes(author);
-                return matchesKeyword && matchesAuthor;
-            });
-
-            if (filteredQuotes.length > 0) {
-                // Show a random quote from filtered results
-                const randomQuote = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
-                currentQuote = randomQuote.text;
-                currentAuthor = randomQuote.author;
-                quoteText.textContent = `"${currentQuote}"`;
-                quoteAuthor.textContent = `— ${currentAuthor} (${filteredQuotes.length} match${filteredQuotes.length !== 1 ? 'es' : ''})`;
-            } else {
-                quoteText.textContent = 'No quotes found matching your search.';
-                quoteAuthor.textContent = 'Try different keywords or author names.';
-                currentQuote = '';
-                currentAuthor = '';
-            }
-        }
-
-        // Clear search and show random quote
-        function clearSearch() {
-            document.getElementById('searchKeyword').value = '';
-            document.getElementById('searchAuthor').value = '';
-            filteredQuotes = [];
-            fetchQuote();
-        }
-
-        function animateQuoteChange() {
-            const quoteText = document.getElementById('quoteText');
-            const quoteAuthor = document.getElementById('quoteAuthor');
-            if (!quoteText || !quoteAuthor) return;
-
-            quoteText.classList.remove('animate__animated', 'animate__fadeInUp');
-            quoteAuthor.classList.remove('animate__animated', 'animate__fadeInUp');
-
-            void quoteText.offsetWidth;
-
-            quoteText.classList.add('animate__animated', 'animate__fadeInUp');
-            quoteAuthor.classList.add('animate__animated', 'animate__fadeInUp');
-        }
-
-        // Fetch Quote
-        async function fetchQuote() {
-            const quoteText = document.getElementById('quoteText');
-            const quoteAuthor = document.getElementById('quoteAuthor');
-
-            quoteText.textContent = 'Loading...';
-            quoteAuthor.textContent = '';
-
-            // If we have filtered results, show next from that set
-            if (filteredQuotes.length > 0) {
-                const randomQuote = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
-                currentQuote = randomQuote.text;
-                currentAuthor = randomQuote.author;
-                quoteText.textContent = `"${currentQuote}"`;
-                quoteAuthor.textContent = `— ${currentAuthor} (${filteredQuotes.length} match${filteredQuotes.length !== 1 ? 'es' : ''})`;
-                animateQuoteChange();
-                return;
-            }
-
-            try {
-                let response;
-                try {
-                    // Try direct API first
-                    response = await fetch('https://quotes-api-ruddy.vercel.app/quotes/random');
-                } catch (directError) {
-                    // Fallback to CORS proxy if direct fails (e.g., CORS or network issues)
-                    console.warn('Direct /quotes/random failed, using proxy:', directError);
-                    response = await fetch('https://api.codetabs.com/v1/proxy?quest=https://quotes-api-ruddy.vercel.app/quotes/random');
-                }
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (!result || !result.data || !result.data.text || !result.data.author) {
-                    throw new Error('Unexpected API response shape');
-                }
-
-                currentQuote = result.data.text;
-                currentAuthor = result.data.author;
-
-                quoteText.textContent = `"${currentQuote}"`;
-                quoteAuthor.textContent = `— ${currentAuthor}`;
-                animateQuoteChange();
-            } catch (error) {
-                console.error('Error fetching quote, using fallback:', error);
-                // Use fallback quotes
-                const randomFallback = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
-                currentQuote = randomFallback.text;
-                currentAuthor = randomFallback.author;
-                quoteText.textContent = `"${currentQuote}"`;
-                quoteAuthor.textContent = `— ${currentAuthor}`;
-                animateQuoteChange();
-            }
-        }
-
-        // Copy Quote
-        function copyQuote(btn) {
-            if (currentQuote) {
-                const textToCopy = `"${currentQuote}" — ${currentAuthor}`;
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    if (!btn) return;
-                    const originalText = btn.textContent;
-                    btn.textContent = '✓ Copied!';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy:', err);
-                });
-            }
-        }
-
-        // Load a quote when DOM is ready (faster on mobile)
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', fetchQuote);
-        } else {
-            fetchQuote();
-        }
-
-        // Add Enter key support for search and init tilt effect
-        document.addEventListener('DOMContentLoaded', () => {
-            const keywordInput = document.getElementById('searchKeyword');
-            const authorInput = document.getElementById('searchAuthor');
-            
-            if (keywordInput) {
-                keywordInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') searchQuotes();
-                });
+            // Add a duplicate set for seamless scrolling (simple hack)
+            for (let i = 0; i < count; i++) {
+                const x = Math.floor(Math.random() * 100); 
+                const y = Math.floor(Math.random() * 100) + 100; // Offset by 100vh
+                boxShadow += `${x}vw ${y}vh 0 ${color}, `;
             }
             
-            if (authorInput) {
-                authorInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') searchQuotes();
-                });
-            }
+            layer.style.boxShadow = boxShadow.slice(0, -2);
+            layer.style.width = size;
+            layer.style.height = size;
+            layer.style.opacity = isMobile ? 0.6 : 0.8; // Lower opacity on mobile
+        }
 
-            const tiltCards = document.querySelectorAll('.tilt-card');
-            tiltCards.forEach(card => {
-                const strength = 18;
-                let ticking = false;
+        // Generate 3 layers of stars (Optimized Counts)
+        const isMobile = window.innerWidth < 768;
+        const counts = isMobile 
+            ? { l1: 20, l2: 10, l3: 4 }     // Mobile: ~34 stars (Clean & Minimal)
+            : { l1: 400, l2: 150, l3: 40 }; // Desktop: ~590 stars
 
-                card.addEventListener('mousemove', (e) => {
-                    if (!ticking) {
-                        requestAnimationFrame(() => {
-                            const rect = card.getBoundingClientRect();
-                            const x = e.clientX - rect.left;
-                            const y = e.clientY - rect.top;
-                            const midX = rect.width / 2;
-                            const midY = rect.height / 2;
+        generateStars('stars1', counts.l1, '#fff', '1px');       
+        generateStars('stars2', counts.l2, '#eac7ff', '2px');    
+        generateStars('stars3', counts.l3, '#fbcfe8', '3px');     
 
-                            const rotateX = ((y - midY) / midY) * -strength;
-                            const rotateY = ((x - midX) / midX) * strength;
+        // State
+        const API_BASE = "https://quotes-api-ruddy.vercel.app";
+        let allQuotes = []; // Cache for search
+        let isFetchingAll = false;
 
-                            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
-                            ticking = false;
-                        });
-                        ticking = true;
-                    }
-                });
+        const ui = {
+            text: document.getElementById('quote-text'),
+            author: document.getElementById('quote-author'),
+            backdrop: document.getElementById('backdrop'),
+            palette: document.getElementById('cmd-palette'),
+            drawer: document.getElementById('side-drawer'),
+            drawerBody: document.getElementById('drawer-body'),
+            toast: document.getElementById('toast'),
+            cmdInput: document.querySelector('.cmd-input'),
+            cmdResults: document.querySelector('.cmd-results')
+        };
 
-                card.addEventListener('mousedown', () => {
-                    card.style.boxShadow = '0 28px 80px rgba(15, 23, 42, 1)';
-                });
+        const content = {
+            about: `
+                <div class="drawer-header"><h2 class="drawer-title">About</h2></div>
+                <p>Quote.Web is a curated digital space designed to focus on the power of words. We removed the clutter to let the thoughts stand out.</p>
+                <p>Powered by our custom <strong>Quotes API</strong>, utilized by developers worldwide to serve inspiration on demand.</p>
+                <p>Version 2.0.0 — Redesigned for clarity.</p>
+            `,
+            contact: `
+                <div class="drawer-header"><h2 class="drawer-title">Contact</h2></div>
+                <p>Have a suggestion or found a bug? I'd love to hear from you.</p>
+                <p>Email: <a href="mailto:maithilpatil9@gmail.com">maithilpatil9@gmail.com</a></p>
+                <p>GitHub: <a href="https://github.com/Chronos778" target="_blank">Chronos778</a></p>
+            `
+        };
 
-                ['mouseup', 'mouseleave'].forEach(ev => {
-                    card.addEventListener(ev, () => {
-                        card.style.boxShadow = '';
-                        if (ev === 'mouseleave') {
-                            card.style.transform = '';
-                        }
+        // --- Core Quote Logic ---
+
+        async function fetchNewQuote() {
+            ui.text.classList.add('loading');
+            
+            try {
+                // Fetch random from API
+                const response = await fetch(`${API_BASE}/quotes/random`);
+                const json = await response.json();
+                renderQuote(json.data);
+            } catch (error) {
+                console.error("Failed to fetch", error);
+                // Fallback attempt from local cache if available
+                if (allQuotes.length > 0) {
+                    const fallback = allQuotes[Math.floor(Math.random() * allQuotes.length)];
+                    renderQuote(fallback);
+                } else {
+                    renderQuote({
+                        text: "The only real failure in life is not to be true to the best one knows.",
+                        author: "Buddha (Offline)"
                     });
-                });
+                }
+            }
+        }
+
+        function renderQuote(data) {
+            // Min delay for animation smoothness
+            setTimeout(() => {
+                ui.text.innerText = `"${data.text}"`;
+                ui.author.innerText = data.author || "Unknown";
+                ui.text.classList.remove('loading');
+            }, 300);
+        }
+
+        function copyQuote() {
+            const textToCopy = ui.text.innerText + " — " + ui.author.innerText;
+            navigator.clipboard.writeText(textToCopy);
+            showToast();
+        }
+
+        function shareQuote() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Daily Inspiration',
+                    text: ui.text.innerText + " — " + ui.author.innerText,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                copyQuote();
+            }
+        }
+
+        function showToast() {
+            ui.toast.classList.add('show');
+            setTimeout(() => ui.toast.classList.remove('show'), 2000);
+        }
+
+        // --- Search / Command Palette Logic ---
+
+        async function ensureQuotesLoaded() {
+            if (allQuotes.length > 0 || isFetchingAll) return;
+            isFetchingAll = true;
+            ui.cmdInput.placeholder = "Loading 10,000+ quotes...";
+            
+            try {
+                const response = await fetch(`${API_BASE}/quotes`);
+                const json = await response.json();
+                if (json.success && Array.isArray(json.data)) {
+                    allQuotes = json.data;
+                    ui.cmdInput.placeholder = "Search by keyword or author...";
+                    ui.cmdInput.disabled = false;
+                    ui.cmdInput.focus();
+                }
+            } catch (e) {
+                console.error("Failed to load all quotes", e);
+                ui.cmdInput.placeholder = "Failed to load search index.";
+            } finally {
+                isFetchingAll = false;
+            }
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase();
+            if (query.length < 2) {
+                renderSearchResults([]);
+                return;
+            }
+
+            const results = allQuotes.filter(q => 
+                q.text.toLowerCase().includes(query) || 
+                (q.author && q.author.toLowerCase().includes(query))
+            ).slice(0, 50); // Limit to 50 results for performance
+
+            renderSearchResults(results);
+        }
+
+        function renderSearchResults(results) {
+            ui.cmdResults.innerHTML = '';
+            
+            if (results.length === 0 && ui.cmdInput.value.length >= 2) {
+                ui.cmdResults.innerHTML = '<div class="cmd-item" style="color: var(--text-muted)">No matches found.</div>';
+                return;
+            }
+
+            // Default actions when empty
+            if (results.length === 0) {
+                 ui.cmdResults.innerHTML = `
+                    <div class="cmd-item selected" onclick="fetchNewQuote(); closeAllOverlays()">
+                        <span>Fetch new random quote</span>
+                        <span class="cmd-kbd">Space</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render Results
+            results.forEach(quote => {
+                const div = document.createElement('div');
+                div.className = 'cmd-item';
+                div.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:4px; overflow:hidden;">
+                        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-main);">${quote.text}</span>
+                        <span style="font-size:11px; color:var(--text-faint);">${quote.author}</span>
+                    </div>
+                `;
+                div.onclick = () => {
+                    renderQuote(quote);
+                    closeAllOverlays();
+                };
+                ui.cmdResults.appendChild(div);
             });
+        }
+
+        // --- UI State Management ---
+
+        function toggleCommandPalette() {
+            const isActive = ui.palette.classList.contains('active');
+            if (isActive) {
+                closeAllOverlays();
+            } else {
+                ui.backdrop.classList.add('active');
+                ui.palette.classList.add('active');
+                
+                // Initialize Search
+                if (allQuotes.length === 0) {
+                    ui.cmdInput.disabled = true;
+                    ensureQuotesLoaded();
+                } else {
+                    ui.cmdInput.disabled = false;
+                    ui.cmdInput.focus();
+                }
+                
+                // Reset results to default
+                ui.cmdInput.value = '';
+                renderSearchResults([]);
+            }
+        }
+
+        function openDrawer(type) {
+            closeAllOverlays(); 
+            ui.drawerBody.innerHTML = content[type];
+            ui.backdrop.classList.add('active');
+            ui.drawer.classList.add('active');
+        }
+
+        function closeDrawer() {
+            ui.drawer.classList.remove('active');
+            ui.backdrop.classList.remove('active');
+        }
+
+        function closeAllOverlays(keepBackdrop = false) {
+            ui.palette.classList.remove('active');
+            ui.drawer.classList.remove('active');
+            if (!keepBackdrop) ui.backdrop.classList.remove('active');
+        }
+
+        // --- Event Listeners ---
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                toggleCommandPalette();
+            }
+            if (e.key === 'Escape') closeAllOverlays();
+            if (e.code === 'Space' && !ui.palette.classList.contains('active')) {
+                // e.preventDefault(); // Optional: prevent scroll
+                // fetchNewQuote(); // Optional: Space to refresh
+            }
         });
+
+        ui.cmdInput.addEventListener('input', handleSearch);
+
+        // Initialize
+        fetchNewQuote();
+
     </script>
 </body>
 </html>

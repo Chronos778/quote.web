@@ -4,14 +4,12 @@ A modern, dark, minimal website for daily inspiration. Browse random quotes with
 
 ## Features
 
-- **Random Quotes** - Displays a new inspirational quote on each page load
-- **Search & Filter** - Search quotes by keyword or filter by author name
-- **New Quote Button** - Fetch fresh quotes with one click
-- **Copy to Clipboard** - Easily share quotes
-- **Fully Responsive** - Beautiful design on all devices
-- **Minimal UI** - Clean, elegant interface with smooth animations and 3D tilt effects
-- **Multi-Page Layout** - Home, About, and Contact sections with smooth navigation
-- **Contact Links** - Email and GitHub links for quick contact
+- **Immersive Reader** - Distraction-free interface with expressive typography
+- **Command Palette (`Ctrl+K`)** - Instant search across the entire quote library
+- **Deep Void Theme** - A premium dark aesthetic with paralax starfield background
+- **Contextual Drawers** - Clean "About" and "Contact" sections that slide in
+- **Mobile Optimized** - Adaptive layout that works perfectly on all devices
+- **One-Click Actions** - Copy, Share, and Fetch new quotes instantly
 
 ## Sections
 
