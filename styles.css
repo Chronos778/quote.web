@@ -356,6 +356,16 @@ canvas#starfield {
     font-weight: 500;
 }
 
+.author-block {
+    transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+}
+
+.author-block.loading {
+    opacity: 0.5;
+    filter: blur(4px);
+    transform: scale(0.98);
+}
+
 .author-line {
     width: 32px;
     height: 1px;

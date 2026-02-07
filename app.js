@@ -99,6 +99,7 @@ const content = {
 
 async function fetchQOD() {
     ui.text.classList.add('loading');
+    ui.author.parentElement.classList.add('loading');
     if (ui.badge) ui.badge.innerText = "Quote of the Day";
 
     try {
@@ -218,6 +219,7 @@ const offlineQuotes = [
 
 async function fetchNewQuote() {
     ui.text.classList.add('loading');
+    ui.author.parentElement.classList.add('loading');
     if (ui.badge) ui.badge.innerText = "Random Inspiration";
 
     try {
@@ -251,6 +253,7 @@ function renderQuote(data) {
         }
 
         ui.text.classList.remove('loading');
+        ui.author.parentElement.classList.remove('loading');
     }, 300);
 }
 
