@@ -79,7 +79,7 @@ When offline, the app serves from a library of 100 built-in quotes.
 
 ## Project Structure
 
-```
+```text
 quote.web/
 ├── index.html           # Main HTML document
 ├── styles.css           # Styles including @font-face declarations
@@ -98,13 +98,13 @@ quote.web/
 
 ## Browser Support
 
-| Browser         | Minimum Version |
-| --------------- | --------------- |
-| Chrome          | 80+             |
-| Firefox         | 75+             |
-| Safari          | 13+             |
-| Edge            | 80+             |
-| Mobile browsers | iOS 13+, Android 8+ |
+| Browser         | Minimum Version      |
+| --------------- | -------------------- |
+| Chrome          | 80+                  |
+| Firefox         | 75+                  |
+| Safari          | 13+                  |
+| Edge            | 80+                  |
+| Mobile browsers | iOS 13+, Android 8+  |
 
 ## Contributing
 
