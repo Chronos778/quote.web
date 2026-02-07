@@ -311,6 +311,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             transition: opacity 0.3s ease, transform 0.3s ease;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .quote-display.loading {
@@ -354,7 +356,7 @@
         }
 
         .dock:hover {
-            transform: translateY(-4px);
+            transform: translateX(-50%) translateY(-4px);
         }
 
         .dock-btn {
@@ -648,6 +650,21 @@
                 /* Prevent jump on tap */
             }
 
+            /* Hide 'Fresh Quote' text on mobile to save space */
+            .dock-btn.primary span {
+                display: none;
+            }
+
+            /* Move toast up to avoid bottom nav */
+            .toast {
+                bottom: calc(140px + env(safe-area-inset-bottom, 20px));
+            }
+
+            .cmd-results {
+                max-height: 40vh;
+                /* Dynamic height on mobile to fit with keyboard */
+            }
+
             .drawer {
                 width: 100%;
                 right: 0;
@@ -697,12 +714,12 @@
         <!-- Reader View -->
         <article class="reader-container">
             <div class="quote-badge">Daily Inspiration</div>
-            <h1 class="quote-display" id="quote-text">
-                "The only way to do great work is to love what you do."
+            <h1 class="quote-display loading" id="quote-text">
+                ...
             </h1>
             <div class="author-block">
                 <div class="author-line"></div>
-                <span id="quote-author">Steve Jobs</span>
+                <span id="quote-author">...</span>
             </div>
         </article>
 
@@ -831,8 +848,29 @@
 
         // --- Core Quote Logic ---
 
+        async function fetchQOD() {
+            ui.text.classList.add('loading');
+            const badge = document.querySelector('.quote-badge');
+            if (badge) badge.innerText = "Quote of the Day";
+
+            try {
+                const response = await fetch(`${API_BASE}/quotes/qod`);
+                const json = await response.json();
+                if (json.success) {
+                    renderQuote(json.data);
+                } else {
+                    fetchNewQuote(); // Fallback
+                }
+            } catch (error) {
+                console.error("Failed to fetch QOD", error);
+                fetchNewQuote(); // Fallback to random
+            }
+        }
+
         async function fetchNewQuote() {
             ui.text.classList.add('loading');
+            const badge = document.querySelector('.quote-badge');
+            if (badge) badge.innerText = "Random Inspiration";
 
             try {
                 // Fetch random from API
@@ -859,6 +897,19 @@
             setTimeout(() => {
                 ui.text.innerText = `"${data.text}"`;
                 ui.author.innerText = data.author || "Unknown";
+
+                // Responsive Font Sizing
+                const len = data.text.length;
+                if (len < 50) {
+                    ui.text.style.fontSize = "clamp(32px, 5vw, 56px)";
+                } else if (len < 100) {
+                    ui.text.style.fontSize = "clamp(24px, 4vw, 42px)";
+                } else if (len < 200) {
+                    ui.text.style.fontSize = "clamp(20px, 3.5vw, 36px)";
+                } else {
+                    ui.text.style.fontSize = "clamp(18px, 2.5vw, 24px)";
+                }
+
                 ui.text.classList.remove('loading');
             }, 300);
         }
@@ -888,41 +939,36 @@
 
         // --- Search / Command Palette Logic ---
 
-        async function ensureQuotesLoaded() {
-            if (allQuotes.length > 0 || isFetchingAll) return;
-            isFetchingAll = true;
-            ui.cmdInput.placeholder = "Loading 10,000+ quotes...";
-
-            try {
-                const response = await fetch(`${API_BASE}/quotes`);
-                const json = await response.json();
-                if (json.success && Array.isArray(json.data)) {
-                    allQuotes = json.data;
-                    ui.cmdInput.placeholder = "Search by keyword or author...";
-                    ui.cmdInput.disabled = false;
-                    ui.cmdInput.focus();
-                }
-            } catch (e) {
-                console.error("Failed to load all quotes", e);
-                ui.cmdInput.placeholder = "Failed to load search index.";
-            } finally {
-                isFetchingAll = false;
-            }
-        }
+        let searchTimeout;
 
         function handleSearch(e) {
-            const query = e.target.value.toLowerCase();
+            const query = e.target.value.trim();
+
+            if (searchTimeout) clearTimeout(searchTimeout);
+
             if (query.length < 2) {
                 renderSearchResults([]);
                 return;
             }
 
-            const results = allQuotes.filter(q =>
-                q.text.toLowerCase().includes(query) ||
-                (q.author && q.author.toLowerCase().includes(query))
-            ).slice(0, 50); // Limit to 50 results for performance
+            // Debounce API call
+            searchTimeout = setTimeout(async () => {
+                ui.cmdResults.innerHTML = '<div class="cmd-item" style="color: var(--text-muted)">Searching...</div>';
 
-            renderSearchResults(results);
+                try {
+                    const response = await fetch(`${API_BASE}/quotes/search?q=${encodeURIComponent(query)}`);
+                    const json = await response.json();
+
+                    if (json.success) {
+                        renderSearchResults(json.data);
+                    } else {
+                        renderSearchResults([]);
+                    }
+                } catch (error) {
+                    console.error("Search failed", error);
+                    ui.cmdResults.innerHTML = '<div class="cmd-item" style="color: var(--text-muted)">Search failed.</div>';
+                }
+            }, 300);
         }
 
         function renderSearchResults(results) {
@@ -972,18 +1018,11 @@
                 ui.backdrop.classList.add('active');
                 ui.palette.classList.add('active');
 
-                // Initialize Search
-                if (allQuotes.length === 0) {
-                    ui.cmdInput.disabled = true;
-                    ensureQuotesLoaded();
-                } else {
-                    ui.cmdInput.disabled = false;
-                    ui.cmdInput.focus();
-                }
+                ui.cmdInput.disabled = false;
+                ui.cmdInput.focus();
+                ui.cmdInput.placeholder = "Search quotes...";
 
-                // Reset results to default
-                ui.cmdInput.value = '';
-                renderSearchResults([]);
+                if (!ui.cmdInput.value) renderSearchResults([]);
             }
         }
 
@@ -1021,8 +1060,8 @@
 
         ui.cmdInput.addEventListener('input', handleSearch);
 
-        // Initialize
-        fetchNewQuote();
+        // Initialize with QOD
+        fetchQOD();
 
     </script>
 </body>
