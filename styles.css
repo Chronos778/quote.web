@@ -372,12 +372,57 @@ canvas#starfield {
     background: var(--border-highlight);
 }
 
+/* Dock Hover Zone with arrow hint */
+.dock-trigger {
+    position: fixed;
+    left: calc(50% + var(--sidebar-width-collapsed) / 2);
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 300px;
+    height: 60px;
+    z-index: 49;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 12px;
+}
+
+/* Arrow hint indicator */
+.dock-hint-arrow {
+    width: 20px;
+    height: 20px;
+    color: white;
+    opacity: 1;
+    animation: bounce-hint 2s ease-in-out infinite;
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dock-trigger:hover .dock-hint-arrow,
+body:has(.dock:hover) .dock-hint-arrow {
+    opacity: 0;
+    transform: translateY(-15px);
+    animation: none;
+    visibility: hidden;
+}
+
+@keyframes bounce-hint {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
 /* Dock (Bottom Actions) */
 .dock {
     position: fixed;
     /* Fixed to viewport to prevent scrolling away */
     left: calc(50% + var(--sidebar-width-collapsed) / 2);
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(100%);
     bottom: 40px;
     background: var(--bg-glass);
     backdrop-filter: blur(20px);
@@ -389,17 +434,32 @@ canvas#starfield {
     align-items: center;
     gap: 8px;
     box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), left 0.4s var(--ease-out-expo);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), left 0.4s var(--ease-out-expo);
 }
 
-@media (min-width: 768px) {
-    body:has(.sidebar:hover) .dock {
-        left: calc(50% + var(--sidebar-width) / 2);
-    }
+/* Show dock when hovering over trigger zone or dock itself */
+.dock-trigger:hover~.dock,
+.dock:hover {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .dock:hover {
     transform: translateX(-50%) translateY(-4px);
+}
+
+@media (min-width: 768px) {
+    body:has(.sidebar:hover) .dock-trigger {
+        left: calc(50% + var(--sidebar-width) / 2);
+    }
+
+    body:has(.sidebar:hover) .dock {
+        left: calc(50% + var(--sidebar-width) / 2);
+    }
 }
 
 .dock-btn {
@@ -676,6 +736,11 @@ canvas#starfield {
         display: none !important;
     }
 
+    /* On mobile, always show dock (hover doesn't work on touch) */
+    .dock-trigger {
+        display: none;
+    }
+
     .dock {
         bottom: calc(90px + env(safe-area-inset-bottom, 20px));
         /* Dock sits above the dynamic sidebar */
@@ -684,6 +749,7 @@ canvas#starfield {
         transform: translateX(-50%) !important;
         /* Force center on mobile */
         z-index: 60;
+        opacity: 1;
         transition: none;
         /* Disable hover float on touch */
     }
