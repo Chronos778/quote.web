@@ -15,3 +15,8 @@ npm-debug.log*
 
 # Scripts
 *.ps1
+
+# Temporary files
+*.zip
+ua.txt
+fonts.css

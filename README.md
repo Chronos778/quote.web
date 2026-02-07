@@ -1,38 +1,24 @@
 # Quote.Web
 
-A modern, dark, minimal website for daily inspiration. Browse random quotes with a premium UI, learn more about the project, and find contact links.
+A modern, dark-themed Progressive Web App (PWA) for daily inspiration. Browse random quotes with a premium UI, search the collection, and enjoy a fully offline-capable experience.
 
 ## Features
 
-- **Immersive Reader** - Distraction-free interface with expressive typography
-- **Command Palette (`Ctrl+K`)** - Instant search across the entire quote library
-- **Deep Void Theme** - A premium dark aesthetic with paralax starfield background
-- **Contextual Drawers** - Clean "About" and "Contact" sections that slide in
-- **Mobile Optimized** - Adaptive layout with native safe-area support for all devices
-- **Performance First** - Intelligent resource scaling for 60fps animations on mobile
-- **One-Click Actions** - Copy, Share, and Fetch new quotes instantly
+- **Progressive Web App** — Installable on any device with native-like experience
+- **Offline Support** — Works without internet (icons, fonts, and 100 fallback quotes)
+- **Immersive Reader** — Distraction-free interface with expressive typography
+- **Command Palette** — Instant server-side search with keyboard navigation (`Ctrl+K`)
+- **Dark Theme** — Premium aesthetic with animated starfield background
+- **Mobile Optimized** — Adaptive layout with safe-area support for all devices
+- **Performance First** — Deferred scripts, self-hosted fonts, 60fps canvas animations
 
-## Sections
-
-### Home
-
-Your daily quote generator with powerful search capabilities. View random inspirational quotes, search by keyword, filter by author, or browse through matching results.
-
-### About
-
-Learn about Quote.Web, our mission, features, and the technologies we use.
-
-### Contact
-
-Connect with us through email or GitHub links.
-
-## Getting Started
+## Quick Start
 
 ### Online
 
-Visit the live website at: [Quote.Web](https://chronos778.github.io/quote.web)
+Visit the live website: [Quote.Web](https://chronos778.github.io/quote.web)
 
-### Local Setup
+### Local Development
 
 1. Clone this repository:
 
@@ -41,83 +27,88 @@ Visit the live website at: [Quote.Web](https://chronos778.github.io/quote.web)
    cd quote.web
    ```
 
-2. Open `index.html` in your web browser
+2. Serve using any HTTP server (required for Service Worker):
 
-3. Start exploring quotes!
+   ```bash
+   # Python
+   python -m http.server 8080
+   
+   # Node.js
+   npx serve .
+   ```
 
-## How It Works
+3. Open `http://localhost:8080` in your browser.
 
-Quote.Web fetches quotes from the [Quotes API](https://quotes-api-ruddy.vercel.app) using a CORS proxy:
+## PWA Installation
 
-- **Random quotes** are fetched from `/quotes/random` endpoint
-- **Search & filter** queries the full `/quotes` endpoint and filters client-side
-- Results display instantly with smooth animations and a beautiful minimal interface
+Quote.Web can be installed as a standalone application:
+
+1. Visit the website in Chrome, Edge, or Safari
+2. Click the "Install" icon in the address bar (or use browser menu)
+3. The app will appear on your home screen or desktop
+
+## API Integration
+
+Quote.Web fetches data from the [Quotes API](https://quotes-api-ruddy.vercel.app):
+
+| Endpoint               | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `/quotes/qod`          | Quote of the Day (shown on initial load) |
+| `/quotes/random`       | Random inspirational quote               |
+| `/quotes/search?q=...` | Server-side search by keyword            |
+
+When offline, the app serves from a library of 100 built-in quotes.
+
+## Keyboard Shortcuts
+
+| Shortcut       | Action                      |
+| -------------- | --------------------------- |
+| `Ctrl + K`     | Open search command palette |
+| `Arrow Up/Down`| Navigate search results     |
+| `Enter`        | Select highlighted result   |
+| `Escape`       | Close overlays              |
 
 ## Technologies
 
-- **HTML5** - Semantic structure
-- **CSS3** - Responsive, dark-theme design with smooth animations and tilt
-- **Vanilla JavaScript** - Pure JavaScript, no frameworks
-- **Quotes API** - 10,000+ curated quotes
+- **HTML5** — Semantic structure
+- **CSS3** — Custom properties, responsive design, glassmorphism effects
+- **JavaScript (ES6+)** — No frameworks, vanilla implementation
+- **Service Worker** — Offline caching and PWA support
+- **Canvas API** — Performant starfield animation
+- **Lucide Icons** — Self-hosted icon library
 
 ## Project Structure
 
-```text
-quote.web/
-├── index.html       # Main website with all sections
-├── README.md        # Project documentation
-├── LICENSE          # MIT License
-└── .gitignore       # Git ignore file
 ```
-
-## Features in Detail
-
-### Quote Display
-
-- Automatic quote loading on page visit
-- Smooth fade-in animations
-- Clean typography and spacing
-
-### Search & Filter
-
-- Search quotes by keyword (searches quote text)
-- Filter quotes by author name
-- Real-time filtering across entire database
-- Result counter showing number of matches
-- Press Enter to search quickly
-- Clear button to reset filters
-
-### Navigation
-
-- Sticky navigation bar
-- Easy section switching
-- Active state indicators
-- Mobile-friendly menu
-
-### Contact Information
-
-- Contact section with email and GitHub links
+quote.web/
+├── index.html           # Main HTML document
+├── styles.css           # Styles including @font-face declarations
+├── app.js               # Application logic
+├── service-worker.js    # PWA caching strategy
+├── manifest.json        # PWA manifest
+├── lucide.min.js        # Local icon library
+├── assets/
+│   ├── fonts/           # Self-hosted Fraunces and Manrope
+│   ├── icons/           # PWA application icons
+│   └── screenshots/     # PWA install screenshots
+├── README.md            # This file
+├── LICENSE              # MIT License
+└── .gitignore           # Git ignore rules
+```
 
 ## Browser Support
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers
-
-## Future Enhancements
-
-- Quote filtering by category/tags
-- User favorites/bookmarks
-- Share to social media
-- Dark mode theme
-- Quote of the day email subscription
-- Advanced search with multiple filters
+| Browser         | Minimum Version |
+| --------------- | --------------- |
+| Chrome          | 80+             |
+| Firefox         | 75+             |
+| Safari          | 13+             |
+| Edge            | 80+             |
+| Mobile browsers | iOS 13+, Android 8+ |
 
 ## Contributing
 
-Contributions are welcome! Feel free to:
+Contributions are welcome. Please feel free to:
 
 - Report bugs
 - Suggest new features
@@ -126,7 +117,7 @@ Contributions are welcome! Feel free to:
 
 ## License
 
-MIT License - See LICENSE file for details
+MIT License — See [LICENSE](LICENSE) file for details.
 
 ## Author
 
@@ -134,4 +125,4 @@ Created by [Chronos778](https://github.com/Chronos778)
 
 ---
 
-### Built with ❤️ for daily inspiration
+Built for daily inspiration.
